@@ -1,0 +1,107 @@
+{% extends 'base/base.html'%}
+{% block content %}
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row text-gray-900">
+                        <div class="col-auto">
+                            <i class="fas fa-recycle"></i>
+                        </div>
+                        <div class="col mr-2">Inventario de materia prima [entradas]</div>
+                        <div class="col-auto">
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#material_modal">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                            <!-- Modal -->
+                            <div class="modal fade" id="material_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <form method="post" action="{% url 'materia_create' %}">{% csrf_token %}
+                                            <div class="modal-header">
+                                                <div class="col-auto"><i class="fas fa-recycle"></i></div>
+                                                <h5 class="modal-title" id="exampleModalLabel">registro de materia prima [entradas]</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="jumbotron">
+                                                    <div class="form-group">
+                                                        {{ form.as_p }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                <button type="submit" class="btn btn-primary">añadir materia prima</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#material_s_modal">
+                                <i class="fas fa-window-minimize"></i>
+                            </button>
+                            <!-- Modal -->
+                            <div class="modal fade" id="material_s_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <form method="post" action="{% url 'materia_salida' %}">{% csrf_token %}
+                                            <div class="modal-header">
+                                                <div class="col-auto"><i class="fas fa-recycle"></i></div>
+                                                <h5 class="modal-title" id="exampleModalLabel">registro de materia prima [salidas]</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="jumbotron">
+                                                    <div class="form-group">
+                                                        {{ form2.as_p }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                <button type="submit" class="btn btn-primary">procesar salida</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    {% if materiales %}
+                        <table class="table table-light table-hover table-striped">
+                        <thead>
+                        <tr class="text-gray-900 font-weight-bold">
+                            <td>fecha</td>
+                            <td>cantidad</td>
+                            <td>precio unitario</td>
+                            <td>monto</td>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            {% for material in materiales %}
+                                <tr>
+                                    <td>{{ material.fecha }}</td>
+                                    <td>{{ material.cantidad }}</td>
+                                    <td>{{ material.precio_unit }}</td>
+                                    <td>{{ material.monto }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                        </table>
+                    {% else %}
+                        <h4>NO EXISTEN REGISTROS DE INGRESO DE MATERIA PRIMA
+
+                        </h4>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

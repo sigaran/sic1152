@@ -1,0 +1,168 @@
+{% extends 'base/base.html' %}
+{% block title %}Añadir Transaccion simple{% endblock %}
+
+{% block search %}{% endblock %}
+
+{% block colormodal %}class="btn btn-danger"{% endblock %}
+
+{% block icon %}
+    <div class="icon-circle bg-danger">
+        <i class="fas  fa-user " style="color:white"></i>
+    </div>
+{% endblock %}
+
+{% block bg-contadorb %}bg-danger text-white"{% endblock %}
+{% block bg-circle1b %}bg-danger "{% endblock %}
+{% block bg-circle2b %}bg-danger "{% endblock %}
+{% block bg-circle3b %}bg-danger "{% endblock %}
+{% block bg-circle4b %}bg-danger "{% endblock %}
+{% block bg-circle5b %}bg-danger "{% endblock %}
+
+{% block scroll %}
+    <a class="scroll-to-top bg-danger rounded"  href="#page-top">
+    <i class="fas fa-angle-up"></i>
+    </a>
+{% endblock %}
+
+{% block campanita %}
+            <!-- Nav Item - Alerts -->
+            <li class="nav-item dropdown no-arrow mx-1">
+              <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas text-white fa-bell fa-fw"></i>
+                <!-- Counter - Alerts -->
+                <span class="badge badge-counter bg-danger text-white" >4</span>
+              </a>
+              <!-- Dropdown - Alerts -->
+              <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
+                <h6 class="dropdown-header" style="background: #2f3037; border-color: #2f3037">
+                  Ultimas transacciones
+                </h6>
+                  {% if ultimos %}
+                      {% for ultimo in ultimos %}
+                          <a class="dropdown-item d-flex align-items-center" href="#">
+                              <div class="mr-3">
+                                  <div class="icon-circle bg-danger ">
+                                      <i class="fas fa-donate text-white"></i>
+                                  </div>
+                              </div>
+                              <div>
+                                  <div class="small text-gray-500">{{ ultimo.fecha }}</div>
+                                  {{ ultimo.descripcion }} por monto de ${{ ultimo.monto|floatformat:2 }}
+                                  {{ ultimo.id }}
+                              </div>
+                          </a>
+                      {% endfor %}
+                  {% endif %}
+                <a class="dropdown-item text-center small text-gray-500" href="{% url 'diario_list' %}">ver todas las transacciones</a>
+              </div>
+            </li>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-xl-12 col-lg-8 col-md-8">
+            <div class="card border-left-danger text-gray-900 shadow mb-4" >
+                <form method="post">{% csrf_token %}
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" >
+                    <div class="col-auto">
+                        <i class="fas fa-coins "></i>
+                    </div>
+                    <div class="col mr-2">
+                        <h6 class="m-0 font-weight-bold text-danger">registro de partida doble</h6>
+                    </div>
+                </div>
+                <div class="card-body">
+                        <div class="form-row">
+                             {% for field in form %}
+                            {% if field.name == 'descripcion_cargo' or field.name == 'descripcion_abono'%}
+                                <div class="form-row col-sm-7 ">
+                                    <label class="col-sm-4">{{ field.label_tag }}</label>
+                                    <div class="col-sm-8 mb-3">
+                                        {{ field }}
+                                        {{ field.errors }}
+                                    </div>
+                                </div>
+                            {% else %}
+                                {% if field.name == 'monto'%}
+                                    <div class=" col-sm-5">
+                                        <div class="form-row ">
+                                            <label class="col-sm-6 ">{{ field.label_tag }}</label>
+                                            <div class="col-sm-6 mb-3 float-left">
+                                                {{ field }}
+                                                {{ field.errors }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% else %}
+                                    {% if field.name == 'abono' or field.name == 'cargo' %}
+                                        <div class=" col-sm-5">
+                                            <div class="form-row ">
+                                                <label class="col-sm-2">{{ field.label_tag }}</label>
+                                                <div class="col-sm-10 mb-3">
+                                                    {{ field }}
+                                                    {{ field.errors }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% else %}
+                                        <div class=" col-sm-12">
+                                            <div class="form-row mr-1">
+                                                <label class="col-sm-3">{{ field.label_tag }}</label>
+                                                <div class="col-sm-9 mb-3">
+                                                    {{ field }}
+                                                    {{ field.errors }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                        </div>
+
+                </div>
+                <div class="card-footer">
+                    <div class="form-group float-right">
+                        <a class="btn btn-secondary" href="{% url 'diario_list' %}">ir al libro diario</a>
+                        <button type="submit" class="btn btn-danger">Añadir asiento</button>
+                    </div>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        function saldo1() {
+            var debe = document.getElementById("id_debe").value;
+            var haber = document.getElementById("id_haber").value;
+            var saldo = Math.abs(parseFloat(debe) - parseFloat(haber));
+            var c = Math.round(saldo *100)/100;
+            if(parseFloat(debe) > parseFloat(haber)){
+                document.getElementById("id_estado").innerHTML = "SALDO DEUDOR";
+            }
+            else {
+                if(parseFloat(debe) == parseFloat(haber)){
+                    document.getElementById("id_estado").innerHTML = "SALDO CERO"
+                }
+                else {
+                    document.getElementById("id_estado").innerHTML = "SALDO ACREEDOR"
+                }
+            }
+            document.getElementById("id_saldo").value = c;
+}
+        document.getElementById("id_debe").onkeydown = function() {
+   saldo1();
+};
+
+        document.getElementById("id_haber").onkeydown = function() {
+   saldo1();
+};
+               document.getElementById("id_debe").onkeyup = function() {
+   saldo1();
+};
+
+        document.getElementById("id_haber").onkeyup = function() {
+   saldo1();
+};
+    </script>
+{% endblock %}

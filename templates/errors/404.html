@@ -1,0 +1,59 @@
+{% extends 'base/base.html' %}
+{% block title %}F por ti{% endblock %}
+{% block colorsdbar %}
+    <ul class="navbar-nav bg-gradient-warning sidebar sidebar-dark accordion" id="accordionSidebar">
+{% endblock %}
+{% block colorbtn %}
+     <button class="btn btn-warning" type="button">
+
+        <i class="fas fa-search fa-sm"></i>
+    </button>
+{% endblock %}
+
+{% block campanita %}
+            <!-- Nav Item - Alerts -->
+            <li class="nav-item dropdown no-arrow mx-1">
+              <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas text-white fa-bell fa-fw"></i>
+                <!-- Counter - Alerts -->
+                <span class="badge badge-counter {% block bg-contadora %}bg-primary text-white {% endblock %}" >4</span>
+              </a>
+              <!-- Dropdown - Alerts -->
+              <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
+                <h6 class="dropdown-header" style="background: #2f3037; border-color: #2f3037">
+                  Ultimas transacciones
+                </h6>
+                  {% if ultimos %}
+                      {% for ultimo in ultimos %}
+                          <a class="dropdown-item d-flex align-items-center" href="#">
+                              <div class="mr-3">
+                                  <div class="icon-circle {% block bg-circle2a %} bg-primary "{% endblock %}>
+                                      <i class="fas fa-donate text-white"></i>
+                                  </div>
+                              </div>
+                              <div>
+                                  <div class="small text-gray-500">{{ ultimo.fecha }}</div>
+                                  {{ ultimo.descripcion }} por monto de ${{ ultimo.monto|floatformat:2 }}
+                                  {{ ultimo.id }}
+                              </div>
+                          </a>
+                      {% endfor %}
+                  {% endif %}
+                <a class="dropdown-item text-center small text-gray-500" href="{% url 'diario_list' %}">ver todas las transacciones</a>
+              </div>
+            </li>
+{% endblock %}
+
+{% block content %}
+    <div class="container" role="group" align="center">
+        <div class="justify-content-center">
+            <div class="error justify-content-center " data-text="Oops!">Oops!</div>
+            <div class="error"><i class="fa fa-bug"></i></div>
+            <p class="lead text-gray-800 mb-5">{% block T %}No se encontraron coincidencias{% endblock %}</p>
+            <p class="text-gray-500 mb-0">{% block st %}al parecer no existen registros que coincidan  con lo que buscas en la base de datos{% endblock %}</p>
+            {% block redirect %}<a href="{% url 'cuenta_list' %}">&larr; regresar al catalgo de cuentas</a>{% endblock %}
+        </div>
+    </div>
+
+{% endblock %}
+</ul>

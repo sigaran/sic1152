@@ -1,0 +1,140 @@
+{% extends 'base/base.html' %}
+{% block title %}Planilla{% endblock %}
+{% block colorsdbar %}
+    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+{% endblock %}
+
+{% block search%}
+
+{% endblock %}
+
+{% block scroll %}
+    <a class="scroll-to-top bg-primary rounded"  href="#page-top">
+    <i class="fas fa-angle-up"></i>
+    </a>
+{% endblock %}
+
+{% block bg-contadorb %}bg-primary text-white"{% endblock %}
+
+{% block bg-circle1b %}bg-primary "{% endblock %}
+{% block bg-circle2b %}bg-primary "{% endblock %}
+{% block bg-circle3b %}bg-primary "{% endblock %}
+{% block bg-circle4b %}bg-primary "{% endblock %}
+{% block bg-circle5b %}bg-primary "{% endblock %}
+
+{% block colormodal %}class="btn btn-primary"{% endblock %}
+
+{% block icon %}
+    <div class="icon-circle bg-primary">
+        <i class="fas  fa-user " style="color:white"></i>
+    </div>
+{% endblock %}
+
+{% block campanita %}
+            <!-- Nav Item - Alerts -->
+            <li class="nav-item dropdown no-arrow mx-1">
+              <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas text-white fa-bell fa-fw"></i>
+                <!-- Counter - Alerts -->
+                <span class="badge badge-counter bg-primary text-white " >4</span>
+              </a>
+              <!-- Dropdown - Alerts -->
+              <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
+                <h6 class="dropdown-header" style="background: #2f3037; border-color: #2f3037">
+                  Ultimas transacciones
+                </h6>
+                  {% if ultimos %}
+                      {% for ultimo in ultimos %}
+                          <a class="dropdown-item d-flex align-items-center" href="#">
+                              <div class="mr-3">
+                                  <div class="icon-circle bg-primary ">
+                                      <i class="fas fa-donate text-white"></i>
+                                  </div>
+                              </div>
+                              <div>
+                                  <div class="small text-gray-500">{{ ultimo.fecha }}</div>
+                                  {{ ultimo.descripcion }} por monto de ${{ ultimo.monto|floatformat:2 }}
+                                  {{ ultimo.id }}
+                              </div>
+                          </a>
+                      {% endfor %}
+                  {% endif %}
+                <a class="dropdown-item text-center small text-gray-500" href="{% url 'diario_list' %}">ver todas las transacciones</a>
+              </div>
+            </li>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-xl-5 col-lg-8 col-md-8">
+            <div class="card border-left-primary shadow mb-4" >
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <div class="col-auto">
+                        <i class="text-gray-900 fas fa-user "></i>
+                    </div>
+                    <div class="col mr-2">
+                        <h6 class="m-0 font-weight-bold text-primary">registro de empleados</h6>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <form method="post">{% csrf_token %}
+                        <div class="container" role="group">
+                            <div class="col-xl-12 col-lg-8  col-md-8"align="center">
+                                {% for field in form %}
+                                    <div class="field_container " align="left">
+                                        {{ field.label_tag }}
+                                        {{ field }} </br>
+                                        {{ field.errors }}
+                                    </div>
+                                {% endfor %}
+                                <div class="container" align="center">
+                                    <button type="submit" class="btn btn-primary">añadir empleado</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-7 col-lg-7 col-md-8 " >
+            <div class="card border-left-primary shadow mb-4">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <div class="col-auto">
+                        <i class=" text-gray-900 fas fa-info"></i>
+                    </div>
+                    <div class="col mr-2">
+                        <h6 class="m-0 font-weight-bold text-primary">INFORMACION IMPORTANTE</h6>
+                    </div>
+                </div>
+                <div class="card-body text-gray-900 ">
+                    <p class="m-0 font-weight-bold ">USTED HA INGRESADO AL AREA DE AÑADIR EMPLEADOS</p>
+                    <P>si ha ingresado por error seleccione una de las siguientes opciones para ser redireccionado al lugar correcto</P>
+                    <hr/>
+                    <a class="btn btn-primary btn-group" href="{% url 'index' %}" data-toggle="tooltip" data-placement="top" title="volver a home">inicio</a>
+                    <a class="btn btn-primary btn-group" href="{% url 'cuenta_list' %}" data-toggle="tooltip" data-placement="top" title="ir al catalogo de cuentas">catalogo</a>
+                    <a class="btn btn-primary btn-group" href="{% url 'empleado_list' %}" data-toggle="tooltip" data-placement="top" title="regresar a planilla">planilla</a>
+                    <a class="btn btn-primary btn-group" href="{% url 'diario_list' %}" data-toggle="tooltip" data-placement="top" title="ir a libro diario">libro diario</a>
+                    <a class="btn btn-primary btn-group" href="{% url 'materia_create' %}" data-toggle="tooltip" data-placement="top" title="ir a registro de matreia prima">inventario</a>
+                </div>
+            </div>
+            <p></p>
+            <div class="card border-left-primary text-gray-900 shadow mb-4">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                   <div class="col-auto">
+                        <i class="fas fa-info"></i>
+                    </div>
+                    <div class="col mr-2">
+                        <h6 class="m-0 font-weight-bold text-primary">INFORMACION IMPORTANTE</h6>
+                    </div>
+                </div>
+                <div class="card-body">
+                        <p class="m-0 font-weight-bold ">para registrar un nuevo empleado tome en consideracion los siguientes criterios para el llenado correcto del formulario:</p>
+                        <p class="m-0 ">1- llenar todos los campos con los datos solicitados</p>
+                        <p class="m-0 ">2- el codigo de empleado esta compuesto por 9 digitos alfanumericos</p>
+                        <p class="m-0 ">3- el campo nombres soporta un maximo de 40 caracteres alfanumericos</p>
+                        <p class="m-0 ">4- el campo apellidos soporta el mismo numero de caracteres </p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

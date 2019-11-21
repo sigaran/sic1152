@@ -1,0 +1,149 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Planilla{% endblock %}
+{% block colorbtn %}
+     <button class="btn btn-primary" type="button">
+
+        <i class="fas fa-search fa-sm"></i>
+    </button>
+{% endblock %}
+
+{% block icon %}
+    <div class="icon-circle bg-primary">
+        <i class="fas fa-user " style="color:white"></i>
+    </div>
+{% endblock %}
+
+{% block scroll %}
+    <a class="scroll-to-top bg-primary rounded"  href="#page-top">
+    <i class="fas fa-angle-up"></i>
+    </a>
+{% endblock %}
+
+{% block campanita %}
+            <!-- Nav Item - Alerts -->
+            <li class="nav-item dropdown no-arrow mx-1">
+              <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas text-white fa-bell fa-fw"></i>
+                <!-- Counter - Alerts -->
+                <span class="badge badge-counter bg-primary text-white" >4</span>
+              </a>
+              <!-- Dropdown - Alerts -->
+              <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
+                <h6 class="dropdown-header" style="background: #2f3037; border-color: #2f3037">
+                  Ultimas transacciones
+                </h6>
+                  {% if ultimos %}
+                      {% for ultimo in ultimos %}
+                          <a class="dropdown-item d-flex align-items-center" href="#">
+                              <div class="mr-3">
+                                  <div class="icon-circle bg-primary ">
+                                      <i class="fas fa-donate text-white"></i>
+                                  </div>
+                              </div>
+                              <div>
+                                  <div class="small text-gray-500">{{ ultimo.fecha }}</div>
+                                  {{ ultimo.descripcion }} por monto de ${{ ultimo.monto|floatformat:2 }}
+                                  {{ ultimo.id }}
+                              </div>
+                          </a>
+                      {% endfor %}
+                  {% endif %}
+                <a class="dropdown-item text-center small text-gray-500" href="{% url 'diario_list' %}">ver todas las transacciones</a>
+              </div>
+            </li>
+{% endblock %}
+
+{% block colormodal%}class="btn btn-primary"{% endblock %}
+
+{% block content %}
+    <div class="card border-left-primary shadow mb-4">
+        <div class="card-header py-2 d-flex flex-row align-items-center justify-content-between">
+            <div class="col-auto">
+                <i class="fas fa-user text-gray-900"></i>
+            </div>
+            <div class="col mr-2">
+                <h6 class="m-0 font-weight-bold text-primary">registro de empleados</h6>
+            </div>
+            <a class="btn btn-outline-primary " href="{% url 'empleado_create' %}" data-toggle="tooltip" data-placement="top" title="añadir empleado">
+                <i class="fas fa-plus "></i>
+            </a>
+            <div class="col-auto">
+                <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#modal-csv">
+                    <i class="fas fa-upload" data-toggle="tooltip" data-placement="top" title="importar planilla"></i>
+                </button>
+            </div>
+
+            <div class="modal fade" id="modal-csv" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <form action="{% url 'planilla_import' %}" method="post" enctype="multipart/form-data">{% csrf_token %}
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">importar planilla</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p>el orden de los datos debe ser : <br> codigo,nombre,apellidos,salario,renta,afp,iss,salario_neto <br> el archivo no debe contener filas en blaco y todos los campos deben estar presentes</p>
+                                <label>seleccionar archivo csv</label>
+                                <input type="file" name="file">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">importar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body justify-content-center">
+            <div class="container" role="group" >
+                <div class="col-xl-12 col-lg-12 col-md-12" >
+                    <table class="table-light table-striped table-hover text-gray-900">
+                        <thead>
+                            <tr>
+                                <td>codigo</td>
+                                <td> nombre </td>
+                                <td > apellidos </td>
+                                <td> salario </td>
+                                <td > renta </td>
+                                <td > afp </td>
+                                <td > iss </td>
+                                <td>salario neto</td>
+                                <td>opciones</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if object_list %}
+                                {% for empleado in object_list %}
+                                    <tr>
+                                        <td class="col-sm-auto">{{ empleado.codigo }}</td>
+                                        <td class="col-sm-auto">{{ empleado.nombres }}</td>
+                                        <td class="col-sm-auto">{{ empleado.apellidos }}</td>
+                                        <td class="col-sm-auto">${{ empleado.salario|floatformat:2  }}</td>
+                                        <td class="col-sm-auto" >${{ empleado.renta|floatformat:2  }}</td>
+                                        <td class="col-sm-auto">${{ empleado.afp|floatformat:2 }}</td>
+                                        <td class="col-sm-auto">${{ empleado.isss|floatformat:2  }}</td>
+                                        <td class="col-sm-auto">${{ empleado.sal_neto|floatformat:2 }}</td>
+                                        <td class="col-sm-11 btn-group"  role="group" >
+                                            <a class="btn btn-primary btn-sm " href="{% url 'empleado_edit' empleado.codigo %}">
+                                                <i class="fas fa-user-edit medium" ></i>
+                                            </a>
+                                            <a class="btn btn-danger btn-sm" href="{% url 'index' %}">
+                                                <i class="fas fa-trash medium "></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            {% else %}
+                                <h1>No hay registros de personas</h1>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

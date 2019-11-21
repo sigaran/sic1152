@@ -1,0 +1,142 @@
+{% extends 'base/base.html' %}
+{% block title %}Añadir Cuenta{% endblock %}
+{% block icon %}
+    <div class="icon-circle bg-success">
+        <i class="fas  fa-user " style="color:white"></i>
+    </div>
+{% endblock %}
+{% block colormodal %}class="btn btn-success"{% endblock %}
+{% block bg-contadorb %}bg-success text-white"{% endblock %}
+{% block bg-circle1b %}bg-success "{% endblock %}
+{% block bg-circle2b %}bg-success "{% endblock %}
+{% block bg-circle3b %}bg-success "{% endblock %}
+{% block bg-circle4b %}bg-success "{% endblock %}
+{% block bg-circle5b %}bg-success "{% endblock %}
+{% block scroll %}
+    <a class="scroll-to-top bg-success rounded"  href="#page-top">
+    <i class="fas fa-angle-up"></i>
+    </a>
+{% endblock %}
+
+
+{% block campanita %}
+            <!-- Nav Item - Alerts -->
+            <li class="nav-item dropdown no-arrow mx-1">
+              <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas text-white fa-bell fa-fw"></i>
+                <!-- Counter - Alerts -->
+                <span class="badge badge-counter bg-success text-white" >4</span>
+              </a>
+              <!-- Dropdown - Alerts -->
+              <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
+                <h6 class="dropdown-header" style="background: #2f3037; border-color: #2f3037">
+                  Ultimas transacciones
+                </h6>
+                  {% if ultimos %}
+                      {% for ultimo in ultimos %}
+                          <a class="dropdown-item d-flex align-items-center" href="#">
+                              <div class="mr-3">
+                                  <div class="icon-circle bg-success ">
+                                      <i class="fas fa-donate text-white"></i>
+                                  </div>
+                              </div>
+                              <div>
+                                  <div class="small text-gray-500">{{ ultimo.fecha }}</div>
+                                  {{ ultimo.descripcion }} por monto de ${{ ultimo.monto|floatformat:2 }}
+                                  {{ ultimo.id }}
+                              </div>
+                          </a>
+                      {% endfor %}
+                  {% endif %}
+                <a class="dropdown-item text-center small text-gray-500" href="{% url 'diario_list' %}">ver todas las transacciones</a>
+              </div>
+            </li>
+{% endblock %}
+
+{% block search %}{% endblock %}
+{% block search_xs %}{% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-xl-5 col-lg-8 col-md-8">
+            <div class="card border-left-success shadow mb-4">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <div class="col-auto text-gray-900">
+                        <i class="fas fa-user "></i>
+                    </div>
+                    <div class="col mr-2">
+                        <h6 class="m-0 font-weight-bold text-success">registro de cuentas</h6>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <form method="post">{% csrf_token %}
+                        <div class="container" role="group">
+                            <div class="col-xl-12 col-lg-8 col-md-8"align="center">
+                                <a class="m-0 text-success">CODIGO DE CUENTA: {{ recomendado }}</a>
+                                {% for field in form %}
+                                    <div class="field_container" align="left">
+                                        {{ field.label_tag }}
+                                        {{field}} </br>
+                                        {{ field.errors }}
+                                    </div>
+                                {% endfor %}
+                                <div class="container" align="center">
+                                    <button type="submit" class="btn btn-success">añadir cuenta</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-7 col-lg-7 col-md-8">
+            <div class="card border-left-success shadow mb-4">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <div class="col-auto text-gray-900">
+                        <i class="fas fa-info"></i>
+                    </div>
+                    <div class="col mr-2">
+                        <h6 class="m-0 font-weight-bold text-success">INFORMACION IMPORTANTE</h6>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <p>
+                        USTED HA INGRESADO DESDE EL RUBRO:</br>
+                        {% if rubro %}
+                            <a class="text-success">{{ rubro.nombre }}</a>
+                            </br>
+                            CON CODIGO:
+                            <a class="text-success">{{ rubro.codigo }}</a><br>
+                        {% endif %}
+                        <a>QUE PERTENECE AL TIPO DE CUENTA : <a class="m-0 text-success">{{ rubro.tipo.nombre }}</a></a><br>
+                        <a>SI NO ES EL RUBRO AL QUE DESEA AGREGAR UNA CUENTA DE CLICK AQUI </br> </a>
+                    </p>
+                    <a class="btn btn-success btn-block" href="{% url 'cuenta_list' %}">regresar al catalogo de cuenta </a>
+                </div>
+            </div>
+            <p></p>
+            <div class="card border-left-success shadow mb-4">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                   <div class="col-auto text-gray-900">
+                        <i class="fas fa-info"></i>
+                    </div>
+                    <div class="col mr-2">
+                        <h6 class="m-0 font-weight-bold text-success">INFORMACION IMPORTANTE</h6>
+                    </div>
+                </div>
+                <div class="card-body " style="height: 12.8rem; overflow: auto;">
+                        <p class="">
+                            <a>CUENTAS EXISTENTES</a><br>
+                            {% if cuentas %}
+                                {% for cuenta in cuentas %}
+                                    <a>{{ cuenta.codigo }}&nbsp;&nbsp;&nbsp;</a><a>{{ cuenta.nombre }}</a><br>
+                                {% endfor %}
+                                {% else %}
+                                    <a>ESTE RUBRO AUN NO POSEE SUBCUENTAS</a>
+                            {% endif %}
+                        </p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+</ul>

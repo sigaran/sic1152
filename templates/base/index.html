@@ -1,0 +1,267 @@
+{% extends 'base/base.html' %}
+{% load catalogo_tags %}
+{% block title %}home{% endblock %}
+{% block colormodal %}class="btn btn-info" {% endblock %}
+{% block bg-circle1b %}bg-info "{% endblock %}
+{% block bg-circle2b %}bg-info "{% endblock %}
+{% block bg-circle3b %}bg-info "{% endblock %}
+{% block bg-circle4b %}bg-info "{% endblock %}
+{% block bg-circle5b %}bg-info "{% endblock %}
+{% block bg-contadorb %}bg-info text-white"{% endblock %}
+{% block search %}
+    <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search" method="post" action={% url 'search_cat' %}>{% csrf_token %}
+        <div class="input-group">
+            <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" name="buscar">
+            <div class="input-group-append">
+                <button class="btn btn-info text-white" type="submit" >
+                    <i class="fas fa-search fa-sm"></i>
+                </button>
+            </div>
+        </div>
+    </form>
+{% endblock %}
+{% block icon %}
+    <div class="icon-circle bg-info text-white">
+        <i class="fas  fa-user " ></i>
+    </div>
+{% endblock %}
+
+{% block scroll %}
+    <a class="scroll-to-top bg-info rounded"  href="#page-top">
+    <i class="fas fa-angle-up"></i>
+    </a>
+{% endblock %}
+
+{% block campanita %}
+            <!-- Nav Item - Alerts -->
+            <li class="nav-item dropdown no-arrow mx-1">
+              <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas text-white fa-bell fa-fw"></i>
+                <!-- Counter - Alerts -->
+                <span class="badge badge-counter bg-info text-white" >4</span>
+              </a>
+              <!-- Dropdown - Alerts -->
+              <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
+                <h6 class="dropdown-header" style="background: #2f3037; border-color: #2f3037">
+                  Ultimas transacciones
+                </h6>
+                  {% if ultimos %}
+                      {% for ultimo in ultimos %}
+                          <a class="dropdown-item d-flex align-items-center" href="#">
+                              <div class="mr-3">
+                                  <div class="icon-circle bg-info">
+                                      <i class="fas fa-donate text-white"></i>
+                                  </div>
+                              </div>
+                              <div>
+                                  <div class="small text-gray-500">{{ ultimo.fecha }}</div>
+                                  {{ ultimo.descripcion }} por monto de ${{ ultimo.monto|floatformat:2 }}
+                                  {{ ultimo.id }}
+                              </div>
+                          </a>
+                      {% endfor %}
+                  {% endif %}
+                <a class="dropdown-item text-center small text-gray-500" href="{% url 'diario_list' %}">ver todas las transacciones</a>
+              </div>
+            </li>
+            {% endblock %}
+
+{% block content %}
+    {% if tipos %}
+        <div class="row">
+            <div class="col-xl-12 col-lg-12 col-md-12 mb-4">
+                <div class="card shadow h-100 py-2 bg-light border-left-info text-info">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xl-center font-weight-bold text-uppercase mb-1">CLASIFICACION GENERAL</div>
+                            </div>
+                            <div class="col-auto">
+                                    <a href="{% url 'tipos_report' %}" class="btn btn-icon-split bg-info">
+                                        <span class="icon text-white">
+                                            <i class="fas fa-download"></i>
+                                        </span>
+                                        <span class="text text-white">generar reporte en pdf</span>
+                                    </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            {% for tipo in tipos %}
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card shadow h-100 py-2 bg-light border-left-info" >
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-sm font-weight-bold text-uppercase mb-1 text-info" >{{ tipo.nombre }}</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">${{ tipo.saldo|floatformat:2 }}</div>
+                                    {% equals tipo.debe tipo.haber as equals %}
+                                    {% debe tipo.debe tipo.haber as debe %}
+                                    {% haber tipo.debe tipo.haber as haber %}
+                                    {% if debe == 1 %}
+                                        <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">SALDO DEUDOR</div>
+                                    {% endif %}
+                                    {% if haber == 1%}
+                                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">SALDO ACREEDOR</div>
+                                    {% endif %}
+                                    {% if equals == 1 %}
+                                        <div class="text-xs font-weight-bold text-gray-600 text-uppercase mb-1">CUENTA SALDADA</div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-auto"><i class="fas fa-dollar-sign fa-2x text-gray-400"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    {% if rubros %}
+        <div class="row">
+            <div class="col-xl-12 col-lg-12 col-md-12 mb-4">
+                <div class="card border-left-info shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xl-center font-weight-bold text-info text-uppercase mb-1">RUBROS DE AGRUPACION</div>
+                            </div>
+                            <div class="col-auto">
+                                <a href="{% url 'rubros_report' %}" class="btn btn-info btn-icon-split">
+                                    <span class="icon text-white-50">
+                                        <i class="fas fa-download"></i>
+                                    </span>
+                                    <span class="text">generar reporte en pdf</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            {% for rubro in rubros %}
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card border-left-info shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1">{{ rubro.nombre }}</div>
+                                    <div class="text-xs font-weight-bold text-gray-900 text-uppercase mb-1">origen: {{ rubro.tipo.nombre }}</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">${{ rubro.saldo|floatformat:2 }}</div>
+                                    {% equals rubro.debe rubro.haber as equals %}
+                                    {% debe rubro.debe rubro.haber as debe %}
+                                    {% haber rubro.debe rubro.haber as haber %}
+                                    {% if debe == 1 %}
+                                        <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">SALDO DEUDOR</div>
+                                    {% endif %}
+                                    {% if haber == 1%}
+                                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">SALDO ACREEDOR</div>
+                                    {% endif %}
+                                    {% if equals == 1 %}
+                                        <div class="text-xs font-weight-bold text-gray-900 text-uppercase mb-1">CUENTA SALDADA</div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-auto"><i class="fas fa-dollar-sign fa-2x text-gray-300"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    {% if cuentas %}
+        <div class="row">
+            <div class="col-xl-12 col-lg-12 col-md-12 mb-4">
+                <div class="card border-left-info shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xl-center font-weight-bold text-info text-uppercase mb-1">CUENTAS MAYORES</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            {% for cuenta in cuentas %}
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card border-left-info shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1">{{ cuenta.nombre }}</div>
+                                    <div class="text-xs font-weight-bold text-gray-900 text-uppercase mb-1">rubro: {{ cuenta.rubro.nombre }}</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">${{ cuenta.saldo|floatformat:2 }}</div>
+                                    {% equals cuenta.debe cuenta.haber as equals %}
+                                    {% debe cuenta.debe cuenta.haber as debe %}
+                                    {% haber cuenta.debe cuenta.haber as haber %}
+                                    {% if debe == 1 %}
+                                        <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">SALDO DEUDOR</div>
+                                    {% endif %}
+                                    {% if haber == 1%}
+                                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">SALDO ACREEDOR</div>
+                                    {% endif %}
+                                    {% if equals == 1 %}
+                                        <div class="text-xs font-weight-bold text-gray-900 text-uppercase mb-1">SALDO CERO</div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-auto"><i class="fas fa-dollar-sign fa-2x text-gray-300"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    {% if subcuentas %}
+        <div class="row">
+            <div class="col-xl-12 col-lg-12 col-md-12 mb-4">
+                <div class="card border-left-info shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xl-center font-weight-bold text-info text-uppercase mb-1">SUBCUENTAS</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            {% for subcuenta in subcuentas %}
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card border-left-info shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1">{{ subcuenta.nombre }}</div>
+                                    <div class="text-xs font-weight-bold text-gray-900 text-uppercase mb-1">cuenta mayor: {{ subcuenta.padre.nombre }}</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">${{ subcuenta.saldo|floatformat:2 }}</div>
+                                    {% equals subcuenta.debe subcuenta.haber as equals %}
+                                    {% debe subcuenta.debe subcuenta.haber as debe %}
+                                    {% haber subcuenta.debe subcuenta.haber as haber %}
+                                    {% if debe == 1 %}
+                                        <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">SALDO DEUDOR</div>
+                                    {% endif %}
+                                    {% if haber == 1%}
+                                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">SALDO ACREEDOR</div>
+                                    {% endif %}
+                                    {% if equals == 1 %}
+                                        <div class="text-xs font-weight-bold text-gray-900 text-uppercase mb-1">SALDO CERO</div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-auto"><i class="fas fa-dollar-sign fa-2x text-gray-300"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endblock %}
+
+</ul>

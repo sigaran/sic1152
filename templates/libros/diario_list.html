@@ -1,0 +1,288 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block title %}Libro Diario{% endblock %}
+
+{% block search %}
+          <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search" method="post" name="buscar">{% csrf_token %}
+            <div class="input-group">
+              <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
+              <div class="input-group-append">
+                  <button class="btn btn-danger" href="{% url 'search_cat' %}" type="submit" >
+                      <i class="fas fa-search fa-sm"></i>
+                  </button>
+              </div>
+            </div>
+          </form>
+{% endblock %}
+
+{% block colormodal %}class="btn btn-danger"{% endblock %}
+
+{% block icon %}
+    <div class="icon-circle bg-danger">
+        <i class="fas  fa-user " style="color:white"></i>
+    </div>
+{% endblock %}
+
+{% block bg-contadorb %}bg-danger text-white"{% endblock %}
+{% block bg-circle1b %}bg-danger "{% endblock %}
+{% block bg-circle2b %}bg-danger "{% endblock %}
+{% block bg-circle3b %}bg-danger "{% endblock %}
+{% block bg-circle4b %}bg-danger "{% endblock %}
+{% block bg-circle5b %}bg-danger "{% endblock %}
+
+{% block scroll %}
+    <a class="scroll-to-top bg-danger rounded"  href="#page-top">
+    <i class="fas fa-angle-up"></i>
+    </a>
+{% endblock %}
+{% block campanita %}
+            <!-- Nav Item - Alerts -->
+            <li class="nav-item dropdown no-arrow mx-1">
+              <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas text-white fa-bell fa-fw"></i>
+                <!-- Counter - Alerts -->
+                <span class="badge badge-counter bg-danger text-white " >4</span>
+              </a>
+              <!-- Dropdown - Alerts -->
+              <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
+                <h6 class="dropdown-header" style="background: #2f3037; border-color: #2f3037">
+                  Ultimas transacciones
+                </h6>
+                  {% if ultimos %}
+                      {% for ultimo in ultimos %}
+                          <a class="dropdown-item d-flex align-items-center" href="#">
+                              <div class="mr-3">
+                                  <div class="icon-circle bg-danger ">
+                                      <i class="fas fa-donate text-white"></i>
+                                  </div>
+                              </div>
+                              <div>
+                                  <div class="small text-gray-500">{{ ultimo.fecha }}</div>
+                                  {{ ultimo.descripcion }} por monto de ${{ ultimo.monto|floatformat:2 }}
+                                  {{ ultimo.id }}
+                              </div>
+                          </a>
+                      {% endfor %}
+                  {% endif %}
+                <a class="dropdown-item text-center small text-gray-500" href="{% url 'diario_list' %}">ver todas las transacciones</a>
+              </div>
+            </li>
+{% endblock %}
+
+{% block content %}
+    <div class="card border-left-danger shadow mb-4">
+        <div class="card-header py-2 d-flex flex-row align-items-center justify-content-between">
+            <div class="col-auto text-gray-900">
+                <i class="fas fa-clipboard-check "></i>
+            </div>
+            <div class="col mr-2">
+                <h6 class="m-0 font-weight-bold text-danger">libro diario</h6>
+            </div>
+            <div class="dropdown no-arrow show" id =dropdownLibros>
+                <a class="btn btn-danger dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-plus"></i>
+                </a>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <a class="dropdown-item" href="{% url 'pdoble_create' %}">añadir transaccion simple</a>
+                    <a class="dropdown-item" href="{% url 'venta_mixta' %}">añadir venta mixta</a>
+                    <a class="dropdown-item" href="{% url 'compra_mixta' %}">añadir compra mixta</a>
+                </div>
+            </div>
+        </div>
+        <div class="card-body align-content-center ">
+            <div class="container" role="group" >
+                <div class="col-xl-12 col-lg-12 col-md-12 ">
+                    <table class="table col-xl-12 table-hover table-light text-gray-900 table-striped" align="center" >
+                        <thead>
+                            <tr class="text-white bg-danger" >
+                                <td>fecha</td>
+                                <td>monto</td>
+                                <td>descripcion</td>
+                                <td>acciones</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if trans %}
+                                {% for transaccion in trans %}
+                                    <tr class="text-gray-900">
+                                        <td class="col-lg-auto">{{ transaccion.fecha}}</td>
+                                        <td class="col-lg-auto">{{ transaccion.monto|floatformat:2 }}</td>
+                                        <td class="col-lg-auto">{{ transaccion.descripcion}}</td>
+                                        <td class="col-lg-auto justify-content-center"  role="group" >
+                                            <button type="button" class="btn btn-sm btn-danger btn-group  justify-content-center" data-toggle="modal" data-target="#transmodal-{{transaccion.id}}">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            {% if transaccion.tipo_transaccion == 0 %}
+                                            <div class="modal fade" id="transmodal-{{transaccion.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title text-danger" id="exampleModalLabel" >TRANSACCION {{ transaccion.id }}</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <table class=" table-striped table-hover table-light ">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <h5 class="text-gray-900">EMPRESA SA DE CV</h5>
+                                                                        <p class="text-danger">partida numero {{ transaccion.id }}</p>
+                                                                        <p class="text-gray-900">detalle: {{ transaccion.descripcion }}</p>
+                                                                    </tr>
+                                                                    <tr class="text-danger">
+                                                                        <td>cuenta</td>
+                                                                        <td>descripcion</td>
+                                                                        <td>debe</td>
+                                                                        <td>haber</td>
+                                                                    </tr>
+
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr class="text-gray-900">
+                                                                        <td>{{ transaccion.cargo.nombre }}</td>
+                                                                        <td>{{ transaccion.descripcion_cargo }}</td>
+                                                                        <td>{{ transaccion.monto }}</td>
+                                                                        <td></td>
+                                                                    </tr>
+                                                                    <tr class="text-gray-900">
+                                                                        <td>{{ transaccion.abono.nombre }}</td>
+                                                                        <td>{{ transaccion.descripcion_abono }}</td>
+                                                                        <td></td>
+                                                                        <td>{{ transaccion.monto }}</td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <p> transaccion hecha {{ transaccion.fecha }}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {% endif %}
+                                            {% if transaccion.tipo_transaccion == 1 %}
+                                                <div class="modal fade justify-content-center" id="transmodal-{{transaccion.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title text-danger" id="exampleModalLabel" style="color: #007bff">TRANSACCION {{ transaccion.id }}</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <table class="table-striped table-hover table-light">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <h5 class="text-gray-900">EMPRESA SA DE CV</h5>
+                                                                        <p class="text-danger">partida numero {{ transaccion.id }}</p>
+                                                                        <p class="text-gray-900">detalle: {{ transaccion.descripcion }}</p>
+                                                                    </tr>
+                                                                    <tr class="text-danger">
+                                                                        <td>cuenta</td>
+                                                                        <td>descripcion</td>
+                                                                        <td>debe</td>
+                                                                        <td>haber</td>
+                                                                    </tr>
+
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr class="text-gray-900">
+                                                                        <td>{{ transaccion.cargo.nombre }}</td>
+                                                                        <td>{{ transaccion.descripcion_cargo }} contado</td>
+                                                                        <td>{{ transaccion.monto_contado }}</td>
+                                                                        <td></td>
+                                                                    </tr>
+                                                                    <tr class="text-gray-900">
+                                                                        <td>{{ transaccion.cargo_alt.nombre }}</td>
+                                                                        <td>{{ transaccion.descripcion_cargo }} credito</td>
+                                                                        <td>{{ transaccion.monto_credito }}</td>
+                                                                        <td></td>
+                                                                    </tr>
+                                                                    <tr class="text-gray-900">
+                                                                        <td>{{ transaccion.abono.nombre }}</td>
+                                                                        <td>{{ transaccion.descripcion_abono }}</td>
+                                                                        <td></td>
+                                                                        <td>{{ transaccion.monto }}</td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <p> transaccion hecha {{ transaccion.fecha }}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {% endif %}
+                                            {% if transaccion.tipo_transaccion == 2 %}
+                                                <div class="modal fade justify-content-center" id="transmodal-{{transaccion.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title text-danger" id="exampleModalLabel" style="color: #007bff">TRANSACCION {{ transaccion.id }}</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <table class="table-striped table-hover table-light">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <h5 class="text-gray-900">EMPRESA SA DE CV</h5>
+                                                                        <p class="text-danger">partida numero {{ transaccion.id }}</p>
+                                                                        <p class="text-gray-900">detalle: {{ transaccion.descripcion }}</p>
+                                                                    </tr>
+                                                                    <tr class="text-danger">
+                                                                        <td>cuenta</td>
+                                                                        <td>descripcion</td>
+                                                                        <td>debe</td>
+                                                                        <td>haber</td>
+                                                                    </tr>
+
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr class="text-gray-900">
+                                                                        <td>{{ transaccion.cargo.nombre }}</td>
+                                                                        <td>{{ transaccion.descripcion_cargo }}</td>
+                                                                        <td>{{ transaccion.monto }}</td>
+                                                                        <td></td>
+                                                                    </tr>
+                                                                    <tr class="text-gray-900">
+                                                                        <td>{{ transaccion.abono.nombre }}</td>
+                                                                        <td>{{ transaccion.descripcion_abono }} contado</td>
+                                                                        <td></td>
+                                                                        <td>{{ transaccion.monto_contado }}</td>
+
+                                                                    </tr>
+                                                                    <tr class="text-gray-900">
+                                                                        <td>{{ transaccion.abono_alt.nombre }}</td>
+                                                                        <td>{{ transaccion.descripcion_abono }} credito</td>
+                                                                        <td></td>
+                                                                        <td>{{ transaccion.monto_credito }}</td>
+
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <p> transaccion hecha {{ transaccion.fecha }}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            {% else %}
+                                <h1>No hay registros en el libro diario</h1>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

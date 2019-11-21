@@ -1,0 +1,181 @@
+{% extends 'base/base.html' %}
+{% block title %}Añadir Sub-Cuenta{% endblock %}
+
+{% block icon %}
+    <div class="icon-circle bg-success">
+        <i class="fas  fa-user " style="color:white"></i>
+    </div>
+{% endblock %}
+
+{% block colormodal %}class="btn btn-success"{% endblock %}
+{% block bg-contadorb %}bg-success text-white"{% endblock %}
+{% block bg-circle1b %}bg-success "{% endblock %}
+{% block bg-circle2b %}bg-success "{% endblock %}
+{% block bg-circle3b %}bg-success "{% endblock %}
+{% block bg-circle4b %}bg-success "{% endblock %}
+{% block bg-circle5b %}bg-success "{% endblock %}
+
+{% block search %}{% endblock %}
+
+{% block scroll %}
+    <a class="scroll-to-top bg-success rounded"  href="#page-top">
+    <i class="fas fa-angle-up"></i>
+    </a>
+{% endblock %}
+
+{% block campanita %}
+            <!-- Nav Item - Alerts -->
+            <li class="nav-item dropdown no-arrow mx-1">
+              <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas text-white fa-bell fa-fw"></i>
+                <!-- Counter - Alerts -->
+                <span class="badge badge-counter bg-success text-white " >4</span>
+              </a>
+              <!-- Dropdown - Alerts -->
+              <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
+                <h6 class="dropdown-header" style="background: #2f3037; border-color: #2f3037">
+                  Ultimas transacciones
+                </h6>
+                  {% if ultimos %}
+                      {% for ultimo in ultimos %}
+                          <a class="dropdown-item d-flex align-items-center" href="#">
+                              <div class="mr-3">
+                                  <div class="icon-circle bg-success ">
+                                      <i class="fas fa-donate text-white"></i>
+                                  </div>
+                              </div>
+                              <div>
+                                  <div class="small text-gray-500">{{ ultimo.fecha }}</div>
+                                  {{ ultimo.descripcion }} por monto de ${{ ultimo.monto|floatformat:2 }}
+                                  {{ ultimo.id }}
+                              </div>
+                          </a>
+                      {% endfor %}
+                  {% endif %}
+                <a class="dropdown-item text-center small text-gray-500" href="{% url 'diario_list' %}">ver todas las transacciones</a>
+              </div>
+            </li>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-xl-5 col-lg-8 col-md-8">
+            <div class="card border-left-success shadow mb-4">
+                <div class="card-header bg-white border-1 py-3 d-flex flex-row align-items-center justify-content-between">
+                    <div class="col-auto text-gray-900">
+                        <i class="fas fa-clipboard-list "></i>
+                    </div>
+                    <div class="col mr-2">
+                        <h6 class="m-0 font-weight-bold text-success">REGISTRO DE SUB CUENTAS</h6>
+                    </div>
+                </div>
+                <div class="card-body ">
+                    <form class="text-gray-900" id="sub_cta_form" method="post">{% csrf_token %}
+                        <div class="container" role="group">
+                            <div class="col-xl-12 col-lg-8 col-md-8"align="center">
+                                <a class="m-0 text-success">CODIGO DE SUBCUENTA: {{ recomentado }}</a>
+                                {% for field in form %}
+                                    <div class="field_container" align="left">
+                                        {{ field.label_tag }}
+                                        {{ field }} </br>
+                                        {{ field.errors }}
+                                    </div>
+                                {% endfor %}
+                                <a class="text-success" id="id_estado"></a><hr>
+                                <div class="container" align="center">
+                                    <button type="submit" class="btn btn-success">Añadir sub cuenta</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-7 col-lg-7 col-md-8">
+            <div class="card border-left-success shadow mb-4">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <div class="col-auto">
+                        <i class="fas fa-info"></i>
+                    </div>
+                    <div class="col mr-2">
+                        <h6 class="m-0 font-weight-bold text-success">INFORMACION IMPORTANTE</h6>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <p>
+                        USTED HA INGRESADO DESDE LA CUENTA MAYOR:</br>
+                        {% if cuenta %}
+                            <a class="text-success">{{ cuenta.nombre }}</a>
+                            </br>
+                            CON CODIGO:
+                            <a class="text-success">{{ cuenta.codigo }}</a><br>
+                        {% endif %}
+                        <a>QUE PERTENECE AL RUBRO : <a class="m-0 text-success">{{ cuenta.rubro.nombre }}</a></a><br>
+                        <a>SI NO ES LA CUENTA A LA QUE DESEA AGREGAR UNA SUB CUENTA DE CLICK AQUI </br> </a>
+                    </p>
+                    <a class="btn btn-success btn-block" href="{% url 'cuenta_list' %}">regresar al catalogo de cuenta </a>
+                </div>
+            </div>
+            <p></p>
+            <div class="card border-left-success shadow mb-4">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                   <div class="col-auto">
+                        <i class="fas fa-info"></i>
+                    </div>
+                    <div class="col mr-2">
+                        <h6 class="m-0 font-weight-bold text-success">INFORMACION IMPORTANTE</h6>
+                    </div>
+                </div>
+                <div class="card-body " style="height: 12.8rem; overflow: auto;">
+                        <p>
+                            <a>SUB CUENTAS EXISTENTES</a><br>
+                            {% if subcuentas %}
+                                {% for subcuenta in subcuentas %}
+                                    <a>{{ subcuenta.codigo }}&nbsp;&nbsp;&nbsp;</a><a>{{ subcuenta.nombre }}</a><br>
+                                {% endfor %}
+                                {% else %}
+                                    <a>ESTA CUENTA AUN NO POSEE SUBCUENTAS</a>
+                            {% endif %}
+                        </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function saldo1() {
+            var debe = document.getElementById("id_debe").value;
+            var haber = document.getElementById("id_haber").value;
+            var saldo = Math.abs(parseFloat(debe) - parseFloat(haber));
+            var c = Math.round(saldo *100)/100;
+            if(parseFloat(debe) > parseFloat(haber)){
+                document.getElementById("id_estado").innerHTML = "SALDO DEUDOR";
+            }
+            else {
+                if(parseFloat(debe) == parseFloat(haber)){
+                    document.getElementById("id_estado").innerHTML = "SALDO CERO"
+                }
+                else {
+                    document.getElementById("id_estado").innerHTML = "SALDO ACREEDOR"
+                }
+            }
+            document.getElementById("id_saldo").value = c;
+}
+        document.getElementById("id_debe").onkeydown = function() {
+   saldo1();
+};
+
+        document.getElementById("id_haber").onkeydown = function() {
+   saldo1();
+};
+               document.getElementById("id_debe").onkeyup = function() {
+   saldo1();
+};
+
+        document.getElementById("id_haber").onkeyup = function() {
+   saldo1();
+};
+    </script>
+{% endblock %}
+
+</ul>
+

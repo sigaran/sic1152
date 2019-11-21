@@ -1,0 +1,247 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% load catalogo_tags %}
+{% block title %}Catalogo de Cuentas{% endblock %}
+{% block scroll %}
+  <a class="scroll-to-top bg-success rounded"  href="#page-top">
+    <i class="fas fa-angle-up"></i>
+  </a>
+  {% endblock %}
+{% block bg-contadorb %}bg-success text-white"{% endblock %}
+{% block bg-circle1b %}bg-success "{% endblock %}
+{% block bg-circle2b %}bg-success "{% endblock %}
+{% block bg-circle3b %}bg-success "{% endblock %}
+{% block bg-circle4b %}bg-success "{% endblock %}
+{% block bg-circle5b %}bg-success "{% endblock %}
+
+{% block campanita %}
+            <!-- Nav Item - Alerts -->
+            <li class="nav-item dropdown no-arrow mx-1">
+              <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas text-white fa-bell fa-fw"></i>
+                <!-- Counter - Alerts -->
+                <span class="badge badge-counter bg-success text-white " >4</span>
+              </a>
+              <!-- Dropdown - Alerts -->
+              <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
+                <h6 class="dropdown-header" style="background: #2f3037; border-color: #2f3037">
+                  Ultimas transacciones
+                </h6>
+                  {% if ultimos %}
+                      {% for ultimo in ultimos %}
+                          <a class="dropdown-item d-flex align-items-center" href="#">
+                              <div class="mr-3">
+                                  <div class="icon-circle bg-success ">
+                                      <i class="fas fa-donate text-white"></i>
+                                  </div>
+                              </div>
+                              <div>
+                                  <div class="small text-gray-500">{{ ultimo.fecha }}</div>
+                                  {{ ultimo.descripcion }} por monto de ${{ ultimo.monto|floatformat:2 }}
+                                  {{ ultimo.id }}
+                              </div>
+                          </a>
+                      {% endfor %}
+                  {% endif %}
+                <a class="dropdown-item text-center small text-gray-500" href="{% url 'diario_list' %}">ver todas las transacciones</a>
+              </div>
+            </li>
+{% endblock %}
+
+{% block search %}
+          <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search" method="post" action={% url 'search_cat' %}>{% csrf_token %}
+            <div class="input-group">
+              <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" name="buscar">
+              <div class="input-group-append">
+                  <button class="btn btn-success text-white" type="submit" >
+                      <i class="fas fa-search fa-sm"></i>
+                  </button>
+              </div>
+            </div>
+          </form>
+{% endblock %}
+
+{% block icon %}
+    <div class="icon-circle bg-success" >
+        <i class="fas  fa-user " style="color:white"></i>
+    </div>
+{% endblock %}
+
+{% block colormodal %}class="btn text-white bg-success"{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="card   shadow mb-4 border-left-success" style="background: #2f3037">
+        <div class="card-header text-white py-2 d-flex flex-row align-items-center justify-content-between" style="background: #2f3037; border-color: #2f3037">
+            <div class="col-auto">
+                <i class="fas fa-clipboard-list"></i>
+            </div>
+            <div class="col mr-2">
+                <h6 class="m-0 font-weight-bold ">CATALOGO DE CUENTAS</h6>
+            </div>
+            <div class="col-auto">
+                <a href="{% url 'catalogo_report' %}" class="btn  btn-icon-split bg-success" >
+                    <span class="icon text-white">
+                        <i class="fas fa-download"></i>
+                    </span>
+                    <span class="text text-white">guardar catalogo en pdf</span>
+                </a>
+            </div>
+        </div>
+        <div class="card-body align-content-center" >
+            <div class="table-hover table-borderless table-responsive  table-striped " style=" background: -webkit-linear-gradient(top, rgba(36, 37, 38, 0.8) 0%,rgba(36,37,38,0.8) 80%),url({% static 'img/conta.jpg' %}); background-attachment: fixed; background-position: right; background-size: cover;">
+                <table class="table table-bordered border-0" id="dataTable">
+                    <thead>
+                        <tr class="text-white" style="background-color: rgba(41, 214, 122,.6);">
+                            <td >codigo</td>
+                            <td > nombre </td>
+                            <td >accion</td>
+                            <td > debe </td>
+                            <td > haber </td>
+                            <td > saldo </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if tipos %}
+                            {% for tipo in tipos %}
+                                <tr data-toggle="tooltip" data-placement="top" title="esto es un tipo general de cuenta">
+                                    <td class="col-sm-auto text-white" ><i class="fas fa-archive">&nbsp;</i>{{ tipo.codigo }}</td>
+                                    <td class="col-sm-auto text-white" >{{ tipo.nombre }}</td>
+                                    <td class="col-sm-auto"></td>
+                                    <td class="col-sm-auto text-white"  >${{ tipo.debe|floatformat:2  }}</td>
+                                    <td class="col-sm-auto text-white" >${{ tipo.haber|floatformat:2  }}</td>
+                                    <td class="col-sm-auto text-white">${{ tipo.saldo|floatformat:2 }}</td>
+                                </tr>
+                                {% if rubros %}
+                                    {% for rubro in rubros %}
+                                        {% if tipo == rubro.tipo %}
+                                            <tr data-toggle="tooltip" data-placement="top" title="esto es un rubro de agrupacion de cuentas">
+                                                <td class="col-sm-auto  text-white" >&nbsp;&nbsp;<i class="fas fa-mail-bulk">&nbsp;</i>{{ rubro.codigo }}</td>
+                                                <td class="col-sm-auto  text-white" >&nbsp;&nbsp;{{ rubro.nombre }}</td>
+                                                <td class=" col-sm-auto  text-white" align="center" >
+                                                    <a class="btn text-white btn-outline btn-group btn-sm btn-success" data-toggle="tooltip" data-placement="top" title="añadir cuenta mayor" href="{% url 'cuenta_create' rubro.codigo %}">
+                                                        <i class="fas fa-plus "></i>
+                                                    </a>
+                                                </td>
+                                                <td class="col-sm-auto text-white" align="center" >${{ rubro.debe|floatformat:2  }}</td>
+                                                <td class="col-sm-auto text-white" align="center" >${{ rubro.haber|floatformat:2  }}</td>
+                                                <td class="col-sm-auto text-white" align="center" >${{ rubro.saldo|floatformat:2 }}</td>
+                                            </tr>
+                                            {% if cuentas %}
+                                                {% for cuenta in cuentas %}
+                                                    {% if rubro == cuenta.rubro %}
+                                                        <tr data-toggle="tooltip" data-placement="top" title="esto es una cuenta mayor">
+                                                            <td class="col-sm-auto  text-white" >&nbsp;&nbsp;&nbsp;&nbsp;<i class="fas fa-clipboard-list">&nbsp;</i>{{ cuenta.codigo }}</td>
+                                                            <td class="col-sm-auto  text-white" >&nbsp;&nbsp;&nbsp;&nbsp;{{ cuenta.nombre }}
+                                                            <td class=" col-sm-auto text-white" align="center" >
+                                                                <a class="btn text-white btn-group  btn-sm btn-success"  data-toggle="tooltip" data-placement="top" title="añadir subcuenta" href="{% url 'subcuenta_create' cuenta.codigo %}">
+                                                                    <i class="fas fa-plus "></i>
+                                                                </a>
+                                                                <button type="button" class="btn btn-group btn-sm btn-success" data-toggle="modal" data-target="#modal-{{ cuenta.codigo }}">
+                                                                    <i class="fas fa-edit"></i>
+                                                                </button>
+                                                                <div class="modal fade" id="modal-{{ cuenta.codigo }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                                    <div class="modal-dialog" role="document">
+                                                                        <div class="modal-content">
+                                                                            <form method="post" action="{% url 'cuenta_update' cuenta.codigo %}">{% csrf_token %}
+                                                                            <div class="modal-header bg-success">
+                                                                                <h5 class="modal-title" id="exampleModalLabel">{{ cuenta.nombre }}</h5>
+                                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                    <span aria-hidden="true">&times;</span>
+                                                                                </button>
+                                                                            </div>
+                                                                            <div class="modal-body text-success">
+                                                                                <label class="col-xl-12 float-left">codigo de cuenta: {{ cuenta.codigo }}</label>
+                                                                                <label class="float-left">nuevo nombre: </label>
+                                                                                    {% for field in form %}
+                                                                                        {{ field }}
+                                                                                        {{ field.errors }}
+                                                                                    {% endfor %}
+                                                                            </div>
+                                                                            <div class="modal-footer">
+                                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                                                <button type="submit" class="btn btn-success">Save changes</button>
+                                                                            </div>
+                                                                            </form>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td class="col-sm-auto  text-white" >${{ cuenta.debe|floatformat:2  }}</td>
+                                                            <td class="col-sm-auto  text-white" >${{ cuenta.haber|floatformat:2  }}</td>
+                                                            <td class="col-sm-auto  text-white" >${{ cuenta.saldo|floatformat:2 }}</td>
+                                                        </tr>
+                                                        {% if subcuentas %}
+                                                            {% for subcuenta in subcuentas %}
+                                                                {% if cuenta == subcuenta.padre %}
+                                                                    <tr data-toggle="tooltip" data-placement="top" title="esto es una subcuenta">
+                                                                        <td class="col-sm-auto text-white">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fas fa-check">&nbsp;</i>{{ subcuenta.codigo }}</td>
+                                                                        <td class="col-sm-auto text-white">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ subcuenta.nombre }}</td>
+                                                                        <td class="text-white" align="center">
+                                                                            <button type="button" class="btn btn-group btn-sm btn-success" data-toggle="modal" data-target="#modal-{{ subcuenta.codigo }}">
+                                                                                <i class="fas fa-edit"></i>
+                                                                             </button>
+                                                                            <div class="modal fade" id="modal-{{ subcuenta.codigo }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                                                <div class="modal-dialog" role="document">
+                                                                                    <div class="modal-content">
+                                                                                        <form method="post" action="{% url 'subcuenta_update' subcuenta.codigo %}">{% csrf_token %}
+                                                                                            <div class="modal-header bg-success">
+                                                                                                <h5 class="modal-title" id="exampleModalLabel">{{ subcuenta.nombre }}</h5>
+                                                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                                    <span aria-hidden="true">&times;</span>
+                                                                                                </button>
+                                                                                            </div>
+                                                                                           <div class="modal-body text-success align-content-center">
+                                                                                               <label class="col-xl-12 ">codigo de cuenta: {{ subcuenta.codigo }}</label>
+                                                                                               <label class="float-left">nuevo nombre: </label>
+                                                                                               {% for field in form %}
+                                                                                                   {{ field }}
+                                                                                                   {{ field.errors }}
+                                                                                               {% endfor %}
+                                                                                           </div>
+                                                                                            <div class="modal-footer">
+                                                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                                                                <button type="submit" class="btn btn-success">Save changes</button>
+                                                                                            </div>
+                                                                                        </form>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </td>
+                                                                        <td class="col-sm-auto text-white" >${{ subcuenta.debe|floatformat:2  }}</td>
+                                                                        <td class="col-sm-auto text-white" >${{ subcuenta.haber|floatformat:2  }}</td>
+                                                                        {% equals subcuenta.debe subcuenta.haber as equals %}
+                                                                        {% debe subcuenta.debe subcuenta.haber as debe %}
+                                                                        {% haber subcuenta.debe subcuenta.haber as haber %}
+                                                                        {% if debe == 1 %}
+                                                                            <td class="col-sm-auto text-danger" >${{ subcuenta.saldo|floatformat:2 }}</td>
+                                                                        {% endif %}
+                                                                        {% if haber == 1%}
+                                                                            <td class="col-sm-auto text-success" >${{ subcuenta.saldo|floatformat:2 }}</td>
+                                                                        {% endif %}
+                                                                        {% if equals == 1 %}
+                                                                            <td class="col-sm-auto text-white" >${{ subcuenta.saldo|floatformat:2 }}</td>
+                                                                        {% endif %}
+                                                                    </tr>
+                                                                {% endif %}
+                                                            {% endfor %}
+                                                        {% endif %}
+                                                    {% endif%}
+                                                {% endfor %}
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+                            {% endfor %}
+                        {% else %}
+                            <h1>el catalogo de cuentas esta vacio</h1>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+</ul>
