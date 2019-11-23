@@ -4,7 +4,7 @@ from django.views.generic import TemplateView,UpdateView
 from .models import Cuenta, SubCuenta, Tipo, Rubro
 from .functions import update_cuentas_now
 from .forms import CuentaForm, SubCuentaForm, CuentaUForm
-#from apps.libro.models import Transaccion
+from apps.libro.models import Transaccion
 
 import time
 from io import BytesIO
@@ -16,7 +16,7 @@ from django.http import HttpResponse
 class Search_Ct(TemplateView):
 
     def post(self, request):
-        #ultimos = Transaccion.objects.all().order_by('-fecha')[:3][::-1]
+        ultimos = Transaccion.objects.all().order_by('-fecha')[:3][::-1]
         buscar = request.POST['buscar']
         tipos_c = Tipo.objects.all().filter(codigo=buscar)
         tipos_n = Tipo.objects.all().filter(nombre__contains=buscar)
@@ -24,7 +24,7 @@ class Search_Ct(TemplateView):
         cuentas = Cuenta.objects.all()
         subcuentas = SubCuenta.objects.all()
         if tipos_c:
-            contexto = {'tipos': tipos_c,'rubros': rubros,'cuentas': cuentas,'subcuentas':subcuentas}
+            contexto = {'tipos': tipos_c,'rubros': rubros,'cuentas': cuentas,'subcuentas':subcuentas,'ultimos':ultimos}
             return render(request, 'catalogo/cuentas_list.html', contexto)
         else:
             if buscar == 'cuentas':
@@ -32,7 +32,7 @@ class Search_Ct(TemplateView):
                 rubros = Rubro.objects.all().filter(nombre=buscar)
                 cuentas = Cuenta.objects.all()
                 subcuentas = SubCuenta.objects.all().filter(nombre=buscar)
-                contexto = {'tipos': tipos,'rubros':rubros,'cuentas':cuentas,'subcuentas':subcuentas}
+                contexto = {'tipos': tipos,'rubros':rubros,'cuentas':cuentas,'subcuentas':subcuentas,'ultimos':ultimos}
                 return render(request, 'base/index.html', contexto)
             else:
                 if buscar == 'subcuentas':
@@ -40,7 +40,7 @@ class Search_Ct(TemplateView):
                     rubros = Rubro.objects.all().filter(nombre=buscar)
                     cuentas = Cuenta.objects.all().filter(nombre=buscar)
                     subcuentas = SubCuenta.objects.all()
-                    contexto = {'tipos': tipos,'rubros':rubros,'cuentas':cuentas,'subcuentas':subcuentas}
+                    contexto = {'tipos': tipos,'rubros':rubros,'cuentas':cuentas,'subcuentas':subcuentas,'ultimos':ultimos}
                     return render(request, 'base/index.html', contexto)
                 else:
                     if buscar == 'rubros':
@@ -48,18 +48,18 @@ class Search_Ct(TemplateView):
                         rubros = Rubro.objects.all()
                         cuentas = Cuenta.objects.all().filter(nombre=buscar)
                         subcuentas = SubCuenta.objects.all().filter(nombre=buscar)
-                        contexto = {'tipos': tipos, 'rubros': rubros, 'cuentas': cuentas, 'subcuentas': subcuentas}
+                        contexto = {'tipos': tipos, 'rubros': rubros, 'cuentas': cuentas, 'subcuentas': subcuentas,'ultimos':ultimos}
                         return render(request, 'base/index.html', contexto)
                     else:
                         if tipos_n:
-                            contexto = {'tipos': tipos_n, 'rubros': rubros, 'cuentas': cuentas, 'subcuentas': subcuentas}
+                            contexto = {'tipos': tipos_n, 'rubros': rubros, 'cuentas': cuentas, 'subcuentas': subcuentas,'ultimos':ultimos}
                             return render(request, 'catalogo/cuentas_list.html', contexto)
                         else:
                             return redirect('404')
 
 
 def cuentacreate(request, pk):
-    #ultimos = Transaccion.objects.all().order_by('-fecha')[:3][::-1]
+    ultimos = Transaccion.objects.all().order_by('-fecha')[:3][::-1]
     rubro = Rubro.objects.get(codigo=pk)
     cuentas = Cuenta.objects.all().filter(rubro=rubro)
     maximo = Cuenta.objects.all().filter(rubro=rubro).last()
@@ -77,12 +77,12 @@ def cuentacreate(request, pk):
             return redirect('cuenta_list')
     else:
         form = CuentaForm()
-    contexto = {'form': form, 'rubro': rubro, 'cuentas': cuentas, 'ultimo': maximo, 'recomendado': recomendado}
+    contexto = {'form': form, 'rubro': rubro, 'cuentas': cuentas, 'ultimo': maximo, 'recomendado': recomendado,'ultimos':ultimos}
     return render(request, 'catalogo/cuenta_form.html', contexto)
 
 
 def subcuentacreate(request, pk):
-    #ultimos = Transaccion.objects.all().order_by('-fecha')[:3][::-1]
+    ultimos = Transaccion.objects.all().order_by('-fecha')[:3][::-1]
     cuenta = Cuenta.objects.get(codigo=pk)
     subcuentas = SubCuenta.objects.all().filter(padre=cuenta)
     maximo = SubCuenta.objects.all().filter(padre=cuenta).last()
@@ -101,19 +101,19 @@ def subcuentacreate(request, pk):
             return redirect('cuenta_list')
     else:
         form = SubCuentaForm()
-    contexto = {'form': form, 'cuenta': cuenta, 'subcuentas': subcuentas, 'ultimo': maximo, 'recomentado': recomendado}
+    contexto = {'form': form, 'cuenta': cuenta, 'subcuentas': subcuentas, 'ultimo': maximo, 'recomentado': recomendado,'ultimos':ultimos}
     return render(request, 'catalogo/subcuenta_form.html', contexto)
 
 
 def cuentalist(request):
-    #ultimos = Transaccion.objects.all().order_by('-fecha')[:3][::-1]
+    ultimos = Transaccion.objects.all().order_by('-fecha')[:3][::-1]
     #update_cuentas_now()
     form = CuentaUForm
     tipo = Tipo.objects.all()
     rubro = Rubro.objects.all()
     cuenta = Cuenta.objects.all()
     subcuenta = SubCuenta.objects.all()
-    contexto = {'cuentas': cuenta, 'subcuentas': subcuenta, 'tipos': tipo, 'rubros': rubro, 'form': form}
+    contexto = {'cuentas': cuenta, 'subcuentas': subcuenta, 'tipos': tipo, 'rubros': rubro, 'form': form,'ultimos':ultimos}
     return render(request, 'catalogo/cuentas_list.html', contexto)
 
 

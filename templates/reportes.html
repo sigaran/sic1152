@@ -1,0 +1,104 @@
+{% extends 'base/base.html' %}
+{% block content %}
+    {% if messages %}
+        {% for msg in messages %}
+            <div class="alert alert-danger" role="alert">
+                {{ msg }}
+            </div>
+        {% endfor %}
+    {% endif %}
+    <div class="row ">
+        <div class="col-xl-3" align="center">
+            <div class="card border-left-info shadow-lg mb-4 mr-4 " style="height: 460px;">
+                <div class="card-header">
+                   <h5 class="text-info font-weight-bolder">BALANCE GENERAL</h5>
+                </div>
+                <div class="card-body">
+                    <p class="text-gray-900">opcion ideal para obtener el estado de las cuentas de balance a la fecha {{ fecha }}</p>
+                </div>
+                <a class="text-info" style="font-size: 80px;"><i class="fas fa-print"></i></a>
+                <div class="card-footer justify-content-center align-content-center align-items-center">
+                    <a class="btn btn-block btn-info" href="{% url 'index' %}">
+                        <i class="fas fa-download"></i> descargar
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3" align="center">
+            <form  method="post">{% csrf_token %}
+            <div class="card border-left-success shadow-lg mb-4 mr-4 " style="height: 460px;">
+                     <div class="card-header">
+                        <h5 class="text-success font-weight-bolder">ESTADO DE RESULTADO</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-row mb-2">
+                            <label class="col-auto">del:</label>
+                            <input class="form-control col-auto float-right" name="inicio" placeholder="2019-11-01" type="text" aria-label="">
+                        </div>
+                        <div class="form-row ">
+                            <label class="col-auto"> al:</label>
+                            <input class="form-control col-auto float-right" name="fin" placeholder="2019-11-30" type="text" aria-label="">
+                        </div>
+                    </div>
+                    <a class="text-success" style="font-size: 80px;"><i class="fas fa-print"></i></a>
+                    <div class="card-footer justify-content-center align-content-center align-items-center">
+                        <a class="btn btn-block btn-success" href="{% url 'index' %}">
+                            <i class="fas fa-download"></i> descargar
+                        </a>
+                    </div>
+            </div>
+            </form>
+        </div>
+        <div class="col-xl-3" align="center">
+            <form  method="post">{% csrf_token %}
+            <div class="card border-left-danger shadow-lg mb-4 mr-4 " style="height: 460px;">
+                     <div class="card-header">
+                        <h5 class="text-danger font-weight-bolder">BALANCE DE COMPROBACION</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-row mb-2">
+                            <label class="col-auto">del:</label>
+                            <input class="form-control col-auto float-right" name="inicio" placeholder="2019-11-01" type="text" aria-label="">
+                        </div>
+                        <div class="form-row ">
+                            <label class="col-auto"> al:</label>
+                            <input class="form-control col-auto float-right" name="fin" placeholder="2019-11-30" type="text" aria-label="">
+                        </div>
+                    </div>
+                    <a class="text-danger" style="font-size: 80px;"><i class="fas fa-print"></i></a>
+                    <div class="card-footer justify-content-center align-content-center align-items-center">
+                        <a class="btn btn-block btn-danger" href="{% url 'index' %}">
+                            <i class="fas fa-download"></i> descargar
+                        </a>
+                    </div>
+            </div>
+            </form>
+        </div>
+        <div class="col-xl-3" align="center">
+            <form  method="post" action="{% url 'diario_report' %}">{% csrf_token %}
+            <div class="card border-left-primary shadow-lg mb-4 mr-4 " style="height: 460px;">
+                     <div class="card-header">
+                        <h5 class="text-primary font-weight-bolder">LIBRO DIARIO POR PERIODO</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-row mb-2">
+                            <label class="col-auto">del:</label>
+                            <input class="form-control col-auto float-right" name="inicio" placeholder="2019-11-01" type="text" aria-label="">
+                        </div>
+                        <div class="form-row ">
+                            <label class="col-auto"> al:</label>
+                            <input class="form-control col-auto float-right" name="fin" placeholder="2019-11-30" type="text" aria-label="">
+                        </div>
+                    </div>
+                    <a class="text-primary" style="font-size: 80px;"><i class="fas fa-print"></i></a>
+                    <div class="card-footer justify-content-center align-content-center align-items-center">
+                        <button class="btn btn-block btn-primary" type="submit">
+                            <i class="fas fa-download"></i> Descargar
+                        </button>
+                    </div>
+            </div>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

@@ -6,6 +6,7 @@ class Materia(models.Model):
     tipo = models.IntegerField(default=0)
     fecha = models.DateField(default=timezone.now, blank=True)
     cantidad = models.IntegerField()
+    existencias = models.IntegerField()
     precio_unit = models.FloatField()
     monto = models.FloatField()
 
@@ -20,6 +21,7 @@ class Producto(models.Model):
     tipo = models.IntegerField(default=0)
     fecha = models.DateField(default=timezone.now, blank=True)
     cantidad = models.IntegerField()
+    existencias = models.IntegerField()
     precio_unit = models.FloatField()
     monto = models.FloatField()
 

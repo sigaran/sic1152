@@ -18,13 +18,15 @@ from django.views.generic import RedirectView
 from django.contrib.auth.decorators import login_required
 from django.urls import path
 from django.conf.urls import url, include
-from .views import index, usercreate, error_404, tipos_repot, rubros_repot, support
+from .views import index, usercreate, error_404, tipos_repot, rubros_repot, support, report_index,diario_report
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^register/', login_required(usercreate), name='register'),
     url(r'^home', index, name='index'),
     url(r'^support/', login_required(support), name='support'),
+    url(r'^diario_report/', login_required(diario_report), name='diario_report'),
+    url(r'^reports/', login_required(report_index), name='report_index'),
     url(r'^planilla/', include('apps.planilla.urls')),
     url(r'^catalogo/', include('apps.catalogo.urls')),
     url(r'^libro/', include('apps.libro.urls')),

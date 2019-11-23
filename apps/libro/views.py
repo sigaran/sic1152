@@ -46,10 +46,10 @@ def venta_mixta(request):
             post.save()
             return redirect('diario_list')
     else:
-        contado = Cuenta.objects.get(codigo='1101')
-        credito = Cuenta.objects.get(codigo='1102')
-        abono1 = Cuenta.objects.get(codigo='1105')
-        abono2 = Cuenta.objects.get(codigo='1201')
+        contado = Cuenta.objects.get(codigo='1101')#EFECTIVO Y EQUIVALENTE
+        credito = Cuenta.objects.get(codigo='1102')#CUENTAS Y DOCS POR COBRAR
+        abono1 = Cuenta.objects.get(codigo='1105')#INVENTARIOS
+        abono2 = Cuenta.objects.get(codigo='1201')#PROPIEDADES PLANTA Y EQ
         form = VentaMixtaForm()
         form.fields['cargo'].queryset = SubCuenta.objects.all().filter(padre=contado)
         form.fields['cargo_alt'].queryset = SubCuenta.objects.all().filter(padre=credito)

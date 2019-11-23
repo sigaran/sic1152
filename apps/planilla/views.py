@@ -1,22 +1,23 @@
 import csv, io
 from django.utils.datastructures import MultiValueDictKeyError
 from django.shortcuts import render, redirect
+from django.contrib import messages
 from django.urls import reverse_lazy
 from django.views.generic import ListView
 from apps.planilla.forms import EmpleadoForm, EmpleadoUForm
 from apps.planilla.models import Empleado
-#from apps.libro.models import Transaccion
+from apps.libro.models import Transaccion
 
 
 class EmpleadoList(ListView):
-    #ultimos = Transaccion.objects.all().order_by('-fecha')[:3][::-1]
+    ultimos = Transaccion.objects.all().order_by('-fecha')[:3][::-1]
     model = Empleado
-    #extra_context = {'ultimos': ultimos}
+    extra_context = {'ultimos': ultimos}
     template_name = 'planilla/empleado_list.html'
 
 
 def empleadocreate(request):
-    #ultimos = Transaccion.objects.all().order_by('-fecha')[:3][::-1]
+    ultimos = Transaccion.objects.all().order_by('-fecha')[:3][::-1]
     if request.method == 'POST':
         form = EmpleadoForm(request.POST)
         if form.is_valid():
@@ -26,12 +27,12 @@ def empleadocreate(request):
             post.afp = post.salario * 0.07
             subtotal = post.afp + post.isss + post.renta
             post.sal_neto = post.salario - subtotal
+            messages.success(request,'empleado {} añadido correctamente'.format(post.nombres))
             post.save()
             return redirect('empleado_list')
     else:
         form = EmpleadoForm()
-    #recordar volver a poner los ultimos en el contexto
-    return render(request, 'planilla/empleado_form.html', {'form': form})
+    return render(request, 'planilla/empleado_form.html', {'form': form,'ultimos':ultimos})
 
 
 def empleadoupdate(request, pk):
@@ -48,6 +49,7 @@ def empleadoupdate(request, pk):
             subtotal = post.afp + post.isss + post.renta
             post.sal_neto = post.salario - subtotal
             post.save()
+            messages.success(request,'datos del empleado {} modificados correctamente'.format(post.nombres))
             return redirect('empleado_list')
     return render(request, 'planilla/empleado_form.html', {'form': form})
 
@@ -75,8 +77,9 @@ def planilla_import(request):
                     sal_neto=colum[7]
                 )
         except ValueError or IndexError or StopIteration or UnicodeDecodeError:
-            #ultimos = Transaccion.objects.all().order_by('-fecha')[:3][::-1]
-            return render(request, 'planilla/planilla_error.html')
+            ultimos = Transaccion.objects.all().order_by('-fecha')[:3][::-1]
+            return render(request, 'planilla/planilla_error.html',{'ultimos':ultimos})
+        messages.success(request,'planilla actualizada con exito')
         return redirect('empleado_list')
     else:
         return redirect('empleado_list')

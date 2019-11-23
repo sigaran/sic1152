@@ -99,6 +99,11 @@
             </div>
         </div>
         <div class="card-body justify-content-center">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-success" role="alert">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
             <div class="container" role="group" >
                 <div class="col-xl-12 col-lg-12 col-md-12" >
                     <table class="table-light table-striped table-hover text-gray-900">
