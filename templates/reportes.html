@@ -1,4 +1,8 @@
 {% extends 'base/base.html' %}
+{% load static %}
+{% block  search%}{% endblock %}
+{% block search_xs %}{% endblock %}
+{% block title %}Reportes{% endblock %}
 {% block content %}
     {% if messages %}
         {% for msg in messages %}
@@ -9,9 +13,9 @@
     {% endif %}
     <div class="row ">
         <div class="col-xl-3" align="center">
-            <div class="card border-left-info shadow-lg mb-4 mr-4 " style="height: 460px;">
-                <div class="card-header">
-                   <h5 class="text-info font-weight-bolder">BALANCE GENERAL</h5>
+            <div class="card shadow-lg mb-4 mr-4 " style="height: 460px;">
+                <div class="card-header bg-info">
+                   <h5 class="text-white font-weight-bolder">BALANCE GENERAL</h5>
                 </div>
                 <div class="card-body">
                     <p class="text-gray-900">opcion ideal para obtener el estado de las cuentas de balance a la fecha {{ fecha }}</p>
@@ -26,9 +30,9 @@
         </div>
         <div class="col-xl-3" align="center">
             <form  method="post">{% csrf_token %}
-            <div class="card border-left-success shadow-lg mb-4 mr-4 " style="height: 460px;">
-                     <div class="card-header">
-                        <h5 class="text-success font-weight-bolder">ESTADO DE RESULTADO</h5>
+            <div class="card shadow-lg mb-4 mr-4 " style="height: 460px;">
+                     <div class="card-header bg-success">
+                        <h5 class="text-white font-weight-bolder">ESTADO DE RESULTADO</h5>
                     </div>
                     <div class="card-body">
                         <div class="form-row mb-2">
@@ -51,9 +55,9 @@
         </div>
         <div class="col-xl-3" align="center">
             <form  method="post">{% csrf_token %}
-            <div class="card border-left-danger shadow-lg mb-4 mr-4 " style="height: 460px;">
-                     <div class="card-header">
-                        <h5 class="text-danger font-weight-bolder">BALANCE DE COMPROBACION</h5>
+            <div class="card shadow-lg mb-4 mr-4 " style="height: 460px;">
+                     <div class="card-header bg-danger">
+                        <h5 class="text-white font-weight-bolder">BALANCE DE COMPROBACION</h5>
                     </div>
                     <div class="card-body">
                         <div class="form-row mb-2">
@@ -76,9 +80,9 @@
         </div>
         <div class="col-xl-3" align="center">
             <form  method="post" action="{% url 'diario_report' %}">{% csrf_token %}
-            <div class="card border-left-primary shadow-lg mb-4 mr-4 " style="height: 460px;">
-                     <div class="card-header">
-                        <h5 class="text-primary font-weight-bolder">LIBRO DIARIO POR PERIODO</h5>
+            <div class="card shadow-lg mb-4 mr-4 " style="height: 460px;">
+                     <div class="card-header bg-primary">
+                        <h5 class="text-white font-weight-bolder">LIBRO DIARIO POR PERIODO</h5>
                     </div>
                     <div class="card-body">
                         <div class="form-row mb-2">
@@ -89,8 +93,8 @@
                             <label class="col-auto"> al:</label>
                             <input class="form-control col-auto float-right" name="fin" placeholder="2019-11-30" type="text" aria-label="">
                         </div>
+                        <a class="text-primary bg-transparent" style="font-size: 80px;"><i class="fas fa-print"></i></a>
                     </div>
-                    <a class="text-primary" style="font-size: 80px;"><i class="fas fa-print"></i></a>
                     <div class="card-footer justify-content-center align-content-center align-items-center">
                         <button class="btn btn-block btn-primary" type="submit">
                             <i class="fas fa-download"></i> Descargar

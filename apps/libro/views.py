@@ -98,12 +98,11 @@ def diariolist(request):
 
 
 def gen_report(request):
-    f_i = request.POST['f_inicio'] #formato 2019-11-01
-    f_f = request.POST['f_fin']
+    f_i = request.POST['inicio'] #formato 2019-11-01
+    f_f = request.POST['fin']
     if request.POST:
         #filtroI = Transaccion.objects.filter(fecha__range=(f_i, f_f))  # <-- filtra rangos
         filtroF = Transaccion.objects.filter(fecha__lt=f_f)  # <--- filtra el valor previo
-
         ctas = reset_subcuentas_now()
         for T in filtroF:
             for ct in ctas:
@@ -112,7 +111,7 @@ def gen_report(request):
                         ct.debe += float(T.monto)
                     else:
                         if ct == T.abono:
-                            ct.abono += float(T.monto)
+                            ct.haber += float(T.monto)
                 else:
                     if T.tipo_transaccion ==1:
                         if ct == T.cargo:
