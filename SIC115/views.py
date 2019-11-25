@@ -25,7 +25,7 @@ def diario_report(request):
             return redirect('report_index')
         if query:
             response = HttpResponse(content_type='application/pdf')
-            response['Content-Disposition'] = 'attachment; filename=clasificacion_general.pdf'
+            response['Content-Disposition'] = 'attachment; filename=libro_diario.pdf'
             buffer = BytesIO()
             cv = canvas.Canvas(buffer, pagesize=A4)
             cv.setFont('Helvetica-Bold', 12)
@@ -97,9 +97,6 @@ def tipos_repot(request):
     cv.setFont('Helvetica', 12)
     cv.drawString(30, 735, 'Clasificacion General')
     cv.setFont('Helvetica-Bold', 12)
-    cv.drawString(480, 750, 'aqui puede ir algo ')
-    cv.setFont('Helvetica-Bold', 12)
-    cv.drawString(480, 735, 'aqui tambien xd')
 
     # generando contenido del pdf
     a = 30
@@ -204,9 +201,6 @@ def rubros_repot(request):
     cv.setFont('Helvetica', 12)
     cv.drawString(30, 735, 'Rubros de Agrupacion')
     cv.setFont('Helvetica-Bold', 12)
-    cv.drawString(480, 750, 'aqui puede ir algo ')
-    cv.setFont('Helvetica-Bold', 12)
-    cv.drawString(480, 735, 'aqui tambien xd')
 
     # generando contenido del pdf
     a = 30
