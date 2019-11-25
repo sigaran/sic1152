@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.db.models import Q
-from apps.catalogo.models import SubCuenta, Cuenta
-from apps.catalogo.functions import reset_subcuentas_now
+from django.contrib import messages
+from apps.catalogo.models import SubCuenta, Cuenta, Rubro
 from .models import Transaccion
 from .forms import TransaccionForm, VentaMixtaForm, CompraMixtaForm
 
@@ -16,10 +16,12 @@ def createpdoble(request):
             abonada = SubCuenta.objects.get(codigo=post.abono.codigo)
             cargada.debe += post.monto
             abonada.haber += post.monto
+            cargada.saldo = float(abs(cargada.debe-cargada.haber))
+            abonada.saldo = float(abs(abonada.debe - abonada.haber))
             cargada.save()
             abonada.save()
             post.save()
-            return redirect('index')
+            return redirect('diario_list')
     else:
         form = TransaccionForm()
     contexto = {'form': form,'ultimos': ultimos}
@@ -41,19 +43,26 @@ def venta_mixta(request):
             cargada_alt.debe += post.monto_credito
             post.monto = post.monto_credito + post.monto_contado
             abonada.haber += post.monto
+            cargada.saldo = float(abs(cargada.debe - cargada.haber))
+            cargada_alt.saldo = float(abs(cargada_alt.debe - cargada_alt.haber))
+            abonada.saldo = float(abs(abonada.debe-abonada.haber))
+            cargada_alt.save()
             cargada.save()
             abonada.save()
             post.save()
             return redirect('diario_list')
     else:
         contado = Cuenta.objects.get(codigo='1101')#EFECTIVO Y EQUIVALENTE
-        credito = Cuenta.objects.get(codigo='1102')#CUENTAS Y DOCS POR COBRAR
-        abono1 = Cuenta.objects.get(codigo='1105')#INVENTARIOS
+        credito = Cuenta.objects.get(codigo='1103')#CUENTAS Y DOCS POR COBRAR
+        abono1 = Cuenta.objects.get(codigo='1104')#INVENTARIOS
         abono2 = Cuenta.objects.get(codigo='1201')#PROPIEDADES PLANTA Y EQ
+        abono3 = Cuenta.objects.get(codigo='1202')  # PROPIEDADES PLANTA Y EQ
+        abono4 = Cuenta.objects.get(codigo='5101')
+        abono5 = Cuenta.objects.get(codigo='5102')
         form = VentaMixtaForm()
         form.fields['cargo'].queryset = SubCuenta.objects.all().filter(padre=contado)
         form.fields['cargo_alt'].queryset = SubCuenta.objects.all().filter(padre=credito)
-        form.fields['abono'].queryset = SubCuenta.objects.all().filter(Q(padre=abono1) | Q(padre=abono2))
+        form.fields['abono'].queryset = SubCuenta.objects.all().filter(Q(padre=abono1) | Q(padre=abono2) | Q(padre=abono3) | Q(padre=abono4) | Q(padre=abono5))
     contexto = {'form': form, 'ultimos':ultimos}
     return render(request, 'libros/ventamixta_form.html', contexto)
 
@@ -73,6 +82,10 @@ def compra_mixta(request):
             abonada_alt.haber += post.monto_credito
             post.monto = post.monto_credito + post.monto_contado
             cargada.debe += post.monto
+            cargada.saldo += float(abs(cargada.debe - cargada.haber))
+            abonada.saldo += float(abs(abonada.debe - abonada.haber))
+            abonada_alt.saldo += float(abs(abonada_alt.debe - abonada_alt.haber))
+            abonada_alt.save()
             cargada.save()
             abonada.save()
             post.save()
@@ -96,39 +109,3 @@ def diariolist(request):
     contexto = {'trans': transacciones,'ultimos':ultimos}
     return render(request, 'libros/diario_list.html', contexto)
 
-
-def gen_report(request):
-    f_i = request.POST['inicio'] #formato 2019-11-01
-    f_f = request.POST['fin']
-    if request.POST:
-        #filtroI = Transaccion.objects.filter(fecha__range=(f_i, f_f))  # <-- filtra rangos
-        filtroF = Transaccion.objects.filter(fecha__lt=f_f)  # <--- filtra el valor previo
-        ctas = reset_subcuentas_now()
-        for T in filtroF:
-            for ct in ctas:
-                if T.tipo_transaccion == 0:
-                    if ct == T.cargo:
-                        ct.debe += float(T.monto)
-                    else:
-                        if ct == T.abono:
-                            ct.haber += float(T.monto)
-                else:
-                    if T.tipo_transaccion ==1:
-                        if ct == T.cargo:
-                            ct.debe += float(T.monto_contado)
-                        else:
-                            if ct == T.cargo_alt:
-                                ct.debe += float(T.monto_credito)
-                            else:
-                                if ct == T.abono:
-                                    ct.haber += float(T.monto)
-                    else:
-                        if ct == T.cargo:
-                            ct.debe += float(T.monto)
-                        else:
-                            if ct == T.abono:
-                                ct.haber += float(T.monto_contado)
-                            if ct == T.abono_alt:
-                                ct.haber += float(T.monto_credito)
-                ct.saldo = float(abs(ct.debe - ct.haber))
-                print('valor inicial de {} {}'.format(ct.nombre,ct.saldo))

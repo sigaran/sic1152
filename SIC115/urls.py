@@ -18,7 +18,7 @@ from django.views.generic import RedirectView
 from django.contrib.auth.decorators import login_required
 from django.urls import path
 from django.conf.urls import url, include
-from .views import index, usercreate, error_404, tipos_repot, rubros_repot, support, report_index,diario_report
+from .views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -32,6 +32,9 @@ urlpatterns = [
     url(r'^libro/', include('apps.libro.urls')),
     url(r'^inventario/', include('apps.inventario.urls')),
     url(r'tipos_report/', login_required(tipos_repot), name='tipos_report'),
+    url(r'bc_report/', login_required(bc_report), name='bc_report'),
+    url(r'er_report/', login_required(er_report), name='er_report'),
+    url(r'bg_report/', login_required(bg_report), name='bg_report'),
     url(r'rubros_report/', login_required(rubros_repot), name='rubros_report'),
     url(r'^accounts/', include('django.contrib.auth.urls')),
     url(r'^error_404/', login_required(error_404), name='404'),

@@ -8,23 +8,30 @@ class EmpleadoForm(forms.ModelForm):
         model = Empleado
         fields = [
             'nombres',
-            'apellidos',
+            'puesto',
+            'fecha',
             'codigo',
             'salario',
+            'desc',
         ]
 
         labels = {
             'nombres': 'nombres',
-            'apellidos': 'apellidos',
+            'puesto': 'puesto',
+            'fecha':'fecha',
             'codigo': 'codigo',
             'salario': 'salario',
+            'desc':'otros descuentos',
         }
 
         widgets = {
             'nombres': forms.TextInput(attrs=html),
-            'apellidos': forms.TextInput(attrs=html),
+            'puesto': forms.TextInput(attrs=html),
+            'fecha': forms.TextInput(attrs={'class': 'form-control text-gray-900 ', 'placeholder': '2019-12-31'}),
             'codigo': forms.TextInput(attrs={'class': 'form-control text-gray-900 ', 'placeholder': 'EMP000000'}),
             'salario': forms.TextInput(attrs=html),
+            'desc': forms.TextInput(attrs={'class': 'form-control text-gray-900 ','type': 'number','step': 'any'})
+
         }
 
 
@@ -33,21 +40,21 @@ class EmpleadoUForm(forms.ModelForm):
         model = Empleado
         fields = [
             'nombres',
-            'apellidos',
+            'puesto',
             'codigo',
             'salario',
         ]
 
         labels = {
             'nombres': 'nombres',
-            'apellidos': 'apellidos',
+            'puesto': 'puesto',
             'codigo': 'codigo',
             'salario': 'salario',
         }
 
         widgets = {
             'nombres': forms.TextInput(attrs={'class': 'form-control'}),
-            'apellidos': forms.TextInput(attrs={'class': 'form-control'}),
+            'puesto': forms.TextInput(attrs={'class': 'form-control'}),
             'codigo': forms.TextInput(attrs={'class': 'form-control', 'readonly': 'readonly'}),
             'salario': forms.TextInput(attrs={'class': 'form-control'}),
         }

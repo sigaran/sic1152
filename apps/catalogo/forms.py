@@ -73,8 +73,8 @@ class SubCuentaForm(forms.ModelForm):
 
         widgets = {
             'nombre': forms.TextInput(attrs={'class': 'form-control'}),
-            'debe': forms.TextInput(attrs={'class': 'form-control', 'type': 'number', 'step': 'any'}),
-            'haber': forms.TextInput(attrs={'class': 'form-control', 'type': 'number', 'step': 'any'}),
+            'debe': forms.TextInput(attrs=contexto),
+            'haber': forms.TextInput(attrs=contexto),
             'saldo': forms.TextInput(attrs=contexto),
             'padre': forms.Select(attrs={'class': 'form-control', 'hidden': 'hidden'}),
             'codigo': forms.TextInput(attrs={'class': 'form-control', 'type': 'number', 'hidden': 'hidden'}),

@@ -1,6 +1,8 @@
 {% extends 'errors/404.html' %}
 {% block campanita %}
 {% endblock %}
+{% block search %}{% endblock %}
+{% block search_xs %}{% endblock %}
 {% block T %}Archivo no Valido{% endblock %}
 {% block st %}verifique la siguiente informacion: el archivo debe poseer extension .csv y tener el orden especificado{% endblock %}
 {% block redirect %}<a href="{% url 'empleado_list' %}">&larr; regresar a la planilla de empleados </a>{% endblock %}

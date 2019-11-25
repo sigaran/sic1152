@@ -2,9 +2,9 @@ from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView,UpdateView
 from .models import Cuenta, SubCuenta, Tipo, Rubro
-from .functions import update_cuentas_now
 from .forms import CuentaForm, SubCuentaForm, CuentaUForm
 from apps.libro.models import Transaccion
+from apps.catalogo.functions import update_cuentas_now
 
 import time
 from io import BytesIO
@@ -19,7 +19,7 @@ class Search_Ct(TemplateView):
         ultimos = Transaccion.objects.all().order_by('-fecha')[:3][::-1]
         buscar = request.POST['buscar']
         tipos_c = Tipo.objects.all().filter(codigo=buscar)
-        tipos_n = Tipo.objects.all().filter(nombre__contains=buscar)
+        tipos_n = Tipo.objects.all().filter(nombre__contains=buscar.upper())
         rubros = Rubro.objects.all()
         cuentas = Cuenta.objects.all()
         subcuentas = SubCuenta.objects.all()
@@ -97,7 +97,6 @@ def subcuentacreate(request, pk):
             post.padre = cuenta
             post.codigo = recomendado.__str__()
             post.save()
-            update_cuentas_now()
             return redirect('cuenta_list')
     else:
         form = SubCuentaForm()
@@ -107,12 +106,12 @@ def subcuentacreate(request, pk):
 
 def cuentalist(request):
     ultimos = Transaccion.objects.all().order_by('-fecha')[:3][::-1]
-    #update_cuentas_now()
     form = CuentaUForm
-    tipo = Tipo.objects.all()
-    rubro = Rubro.objects.all()
-    cuenta = Cuenta.objects.all()
+    update_cuentas_now()
     subcuenta = SubCuenta.objects.all()
+    cuenta = Cuenta.objects.all()
+    rubro = Rubro.objects.all()
+    tipo = Tipo.objects.all()
     contexto = {'cuentas': cuenta, 'subcuentas': subcuenta, 'tipos': tipo, 'rubros': rubro, 'form': form,'ultimos':ultimos}
     return render(request, 'catalogo/cuentas_list.html', contexto)
 

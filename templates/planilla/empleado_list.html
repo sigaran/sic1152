@@ -13,7 +13,8 @@
         <i class="fas fa-user " style="color:white"></i>
     </div>
 {% endblock %}
-
+{% block search %}{% endblock %}
+{% block search_xs %}{% endblock %}
 {% block scroll %}
     <a class="scroll-to-top bg-primary rounded"  href="#page-top">
     <i class="fas fa-angle-up"></i>
@@ -85,7 +86,7 @@
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <p>el orden de los datos debe ser : <br> codigo,nombre,apellidos,salario,renta,afp,iss,salario_neto <br> el archivo no debe contener filas en blaco y todos los campos deben estar presentes</p>
+                                <p>el orden de los datos debe ser : <br> codigo,nombre,puesto,salario,isss,renta,afp,otros descuentos,salario neto, fecha de contratacion[ ej: 2019-12-31] <br> el archivo no debe contener filas en blaco y todos los campos deben estar presentes</p>
                                 <label>seleccionar archivo csv</label>
                                 <input type="file" name="file">
                             </div>
@@ -106,17 +107,15 @@
             {% endif %}
             <div class="container" role="group" >
                 <div class="col-xl-12 col-lg-12 col-md-12" >
-                    <table class="table-light table-striped table-hover text-gray-900">
+                    <table class="table-light table-striped table-hover text-gray-900 col-xl-12">
                         <thead>
                             <tr>
                                 <td>codigo</td>
                                 <td> nombre </td>
-                                <td > apellidos </td>
+                                <td > puesto </td>
                                 <td> salario </td>
-                                <td > renta </td>
-                                <td > afp </td>
-                                <td > iss </td>
                                 <td>salario neto</td>
+                                <td>fecha contratacion</td>
                                 <td>opciones</td>
                             </tr>
                         </thead>
@@ -126,19 +125,38 @@
                                     <tr>
                                         <td class="col-sm-auto">{{ empleado.codigo }}</td>
                                         <td class="col-sm-auto">{{ empleado.nombres }}</td>
-                                        <td class="col-sm-auto">{{ empleado.apellidos }}</td>
+                                        <td class="col-sm-auto">{{ empleado.puesto }}</td>
                                         <td class="col-sm-auto">${{ empleado.salario|floatformat:2  }}</td>
-                                        <td class="col-sm-auto" >${{ empleado.renta|floatformat:2  }}</td>
-                                        <td class="col-sm-auto">${{ empleado.afp|floatformat:2 }}</td>
-                                        <td class="col-sm-auto">${{ empleado.isss|floatformat:2  }}</td>
                                         <td class="col-sm-auto">${{ empleado.sal_neto|floatformat:2 }}</td>
+                                        <td class="col-sm-auto">{{ empleado.fecha   }}</td>
                                         <td class="col-sm-11 btn-group"  role="group" >
                                             <a class="btn btn-primary btn-sm " href="{% url 'empleado_edit' empleado.codigo %}">
-                                                <i class="fas fa-user-edit medium" ></i>
+                                                <i class="fas fa-user-edit" ></i>
                                             </a>
-                                            <a class="btn btn-danger btn-sm" href="{% url 'index' %}">
-                                                <i class="fas fa-trash medium "></i>
+                                            <button type="button" class="btn btn-dark btn-sm" data-toggle="modal" data-target="#modal-{{ empleado.codigo }}">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <a class="btn btn-danger btn-sm" href="{% url 'empleado_del' empleado.codigo %}">
+                                                <i class="fas fa-trash"></i>
                                             </a>
+                                            <!-- Modal -->
+                                            <div class="modal fade" id="modal-{{ empleado.codigo }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="exampleModalLabel">Empleado {{ empleado.codigo }}</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body" align="center">
+                                                           <div class="col-xl-7">
+                                                               <i class="fas fa-user" style="color:#2f3037; font-size: 150px;"></i>
+                                                           </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </td>
                                     </tr>
                                 {% endfor %}

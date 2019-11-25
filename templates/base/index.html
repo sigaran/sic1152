@@ -25,6 +25,7 @@
         <i class="fas  fa-user " ></i>
     </div>
 {% endblock %}
+{% block search_xs %}{% endblock %}
 
 {% block scroll %}
     <a class="scroll-to-top bg-info rounded"  href="#page-top">
@@ -74,7 +75,7 @@
                     <div class="card-body">
                         <div class="row no-gutters align-items-center">
                             <div class="col mr-2">
-                                <div class="text-xl-center font-weight-bold text-uppercase mb-1">CLASIFICACION GENERAL</div>
+                                <div class="text-xl-center font-weight-bold text-uppercase mb-1">CLASIFICACIÓN GENERAL</div>
                             </div>
                             <div class="col-auto">
                                     <a href="{% url 'tipos_report' %}" class="btn btn-icon-split bg-info">

@@ -3,7 +3,7 @@ from django.utils.datastructures import MultiValueDictKeyError
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.urls import reverse_lazy
-from django.views.generic import ListView
+from django.views.generic import ListView, DeleteView
 from apps.planilla.forms import EmpleadoForm, EmpleadoUForm
 from apps.planilla.models import Empleado
 from apps.libro.models import Transaccion
@@ -54,6 +54,18 @@ def empleadoupdate(request, pk):
     return render(request, 'planilla/empleado_form.html', {'form': form})
 
 
+def empleadodelete(request, pk):
+
+    try:
+        empleado = Empleado.objects.get(codigo=pk)
+        empleado.delete()
+        messages.success(request,'empleado {}  {} eliminado correctamente'.format(empleado.nombres,empleado.puesto))
+        return redirect('empleado_list')
+    except :
+        messages.error(request,'ocurrio un error al eliminar el empleado ')
+        return redirect('empleado_list')
+
+
 def planilla_import(request):
 
     if request.POST:
@@ -69,14 +81,16 @@ def planilla_import(request):
                 created = Empleado.objects.update_or_create(
                     codigo=colum[0],
                     nombres=colum[1],
-                    apellidos=colum[2],
+                    puesto=colum[2],
                     salario=colum[3],
                     isss=colum[4],
                     renta=colum[5],
                     afp=colum[6],
-                    sal_neto=colum[7]
+                    desc=colum[7],
+                    sal_neto=colum[8],
+                    fecha=colum[9]
                 )
-        except ValueError or IndexError or StopIteration or UnicodeDecodeError:
+        except:
             ultimos = Transaccion.objects.all().order_by('-fecha')[:3][::-1]
             return render(request, 'planilla/planilla_error.html',{'ultimos':ultimos})
         messages.success(request,'planilla actualizada con exito')
