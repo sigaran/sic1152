@@ -81,7 +81,7 @@ WSGI_APPLICATION = 'SIC115.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'SIC115DB',
+        'NAME': 'SIC115BD',
         'USER': 'postgres',
         'PASSWORD': 'admin',
         'HOST': 'localhost',

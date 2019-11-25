@@ -158,7 +158,6 @@ def index(request):
 
 def error_404(request):
     ultimos = Transaccion.objects.all().order_by('-fecha')[:3][::-1]
-
     return render(request, 'errors/404.html',{'ultimos':ultimos})
 
 
@@ -183,6 +182,7 @@ def usercreate(request):
 def report_index(request):
     fecha = time.strftime("%d/%m/%y")
     ultimos = Transaccion.objects.all().order_by('-fecha')[:3][::-1]
+    ultimos = 'waaa'
     return render(request, 'reportes.html',{'fecha':fecha,'ultimos':ultimos})
 
 
@@ -508,6 +508,8 @@ def er_report(request):
         f_f = request.POST['fin']
         filtroF = Transaccion.objects.filter(fecha__range=(f_i, f_f))
         filtroI = Transaccion.objects.filter(fecha__lt=f_i)
+        filtroI = True
+        filtroF = True
     except:
         messages.error(request, 'fechas con formato incorrecto')
         return redirect('report_index')
