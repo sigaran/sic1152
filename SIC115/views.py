@@ -29,10 +29,10 @@ def diario_report(request):
             buffer = BytesIO()
             cv = canvas.Canvas(buffer, pagesize=A4)
             cv.setFont('Helvetica-Bold', 12)
-            cv.drawString(30,750,'EMPRESA PLASTINOSEQUE')
-            cv.drawString(30,725,'registro de transacciones del {} al {}'.format(f_i,f_f))
+            cv.drawString(220, 750, 'EMPRESA RECITEC')
+            cv.drawString(150, 735, 'registro de transacciones del {} al {}'.format(f_i, f_f))
             a=30
-            b=715
+            b=700
             c=260
             d=460
             conteo =0
@@ -41,9 +41,9 @@ def diario_report(request):
                     cv.showPage()
                     conteo = 0
                     cv.setFont('Helvetica-Bold', 12)
-                    cv.drawString(30, 750, 'fecha')
-                    cv.drawString(120, 750, 'descripcion')
-                    cv.drawString(450, 750, 'monto')
+                    cv.drawString(30, 710, 'fecha')
+                    cv.drawString(120, 710, 'descripcion')
+                    cv.drawString(450, 710, 'monto')
                     cv.setFillColorRGB(0.92578125, 0.92578125, 0.92578125)
                     cv.setStrokeColorRGB(0.92578125, 0.92578125, 0.92578125)
                     cv.setFont('Helvetica-Bold', 42)
@@ -334,7 +334,7 @@ def bc_report(request):
             cv = canvas.Canvas(buffer, pagesize=A4)
             # encabezados
             cv.setFont('Helvetica-Bold', 12)
-            cv.drawString(220, 750, 'EMPRESA PLASTINOSEQUE')
+            cv.drawString(220, 750, 'EMPRESA RECITEC')
             cv.drawString(150, 735, 'balance de comprobacion del {} al {}'.format(f_i, f_f))
             a = 30
             b = 715
@@ -437,7 +437,7 @@ def bc_report(request):
                 cv = canvas.Canvas(buffer, pagesize=A4)
                 #encabezados
                 cv.setFont('Helvetica-Bold', 12)
-                cv.drawString(220, 750, 'EMPRESA PLASTINOSEQUE')
+                cv.drawString(220, 750, 'EMPRESA RECITEC')
                 cv.drawString(150, 735, 'balance de comprobacion del {} al {}'.format(f_i, f_f))
                 a = 30
                 b = 715
@@ -585,7 +585,7 @@ def er_report(request):
                 cv = canvas.Canvas(buffer, pagesize=A4)
                 # encabezados
                 cv.setFont('Helvetica-Bold', 12)
-                cv.drawString(220, 750, 'EMPRESA PLASTINOSEQUE')
+                cv.drawString(220, 750, 'EMPRESA RECITEC')
                 cv.drawString(150, 735, 'estado de resultado del {} al {}'.format(f_i, f_f))
                 cv.drawString(30,715,'cuenta')
                 cv.drawString(360,715,'costos')
@@ -701,7 +701,7 @@ def er_report(request):
                 cv = canvas.Canvas(buffer, pagesize=A4)
                 # encabezados
                 cv.setFont('Helvetica-Bold', 12)
-                cv.drawString(220, 750, 'EMPRESA PLASTINOSEQUE')
+                cv.drawString(220, 750, 'EMPRESA RECITEC')
                 cv.drawString(150, 735, 'estado de resultado del {} al {}'.format(f_i, f_f))
                 cv.drawString(30, 715, 'cuenta')
                 cv.drawString(360, 715, 'costos')
@@ -857,7 +857,7 @@ def bg_report(request):
             cv = canvas.Canvas(buffer, pagesize=A4)
             # encabezados
             cv.setFont('Helvetica-Bold', 12)
-            cv.drawString(220, 750, 'EMPRESA PLASTINOSEQUE')
+            cv.drawString(220, 750, 'EMPRESA RECITEC')
             cv.drawString(150, 735, 'balance general del {} al {}'.format(f_i, f_f))
             cv.drawString(30,715,'cuenta')
             cv.drawString(360, 715, 'activos')
@@ -964,7 +964,7 @@ def bg_report(request):
                 cv = canvas.Canvas(buffer, pagesize=A4)
                 #encabezados
                 cv.setFont('Helvetica-Bold', 12)
-                cv.drawString(220, 750, 'EMPRESA PLASTINOSEQUE')
+                cv.drawString(220, 750, 'EMPRESA RECITEC')
                 cv.drawString(150, 735, 'balance general del {} al {}'.format(f_i, f_f))
                 cv.drawString(30, 715, 'cuenta')
                 cv.drawString(360, 715, 'activos')
