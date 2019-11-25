@@ -43,6 +43,7 @@ class EmpleadoUForm(forms.ModelForm):
             'puesto',
             'codigo',
             'salario',
+            'desc',
         ]
 
         labels = {
@@ -50,11 +51,13 @@ class EmpleadoUForm(forms.ModelForm):
             'puesto': 'puesto',
             'codigo': 'codigo',
             'salario': 'salario',
+            'desc':'otros descuentos',
         }
 
         widgets = {
             'nombres': forms.TextInput(attrs={'class': 'form-control'}),
             'puesto': forms.TextInput(attrs={'class': 'form-control'}),
             'codigo': forms.TextInput(attrs={'class': 'form-control', 'readonly': 'readonly'}),
-            'salario': forms.TextInput(attrs={'class': 'form-control'}),
+            'salario': forms.TextInput(attrs={'class': 'form-control','type':'number','step':'any'}),
+            'desc': forms.TextInput(attrs={'class':'form-control','type':'number','step':'any'})
         }
